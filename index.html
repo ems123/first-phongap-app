@@ -1,131 +1,37 @@
 <!DOCTYPE html>
-<html>
+
+<html ng-app="myFirstApp">
     <head>
-        <title>My First PhoneGApp</title>
-        <link rel="stylesheet" type="text/css" href="css/index.css"/>
-        <script type="text/javascript" language="JavaScript">
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 
-          function openWebsite() {
-            window.location = "http://www.labwise.in";
-          }
-          function showRegisterView() {
-
-            document.getElementById('register').style.display="block";
-    	      document.getElementById('landing').style.display="none";
-          }
-
-          function showProviderView() {
-
-            document.getElementById('register').style.display="none";
-            document.getElementById('landing').style.display="none";
-            document.getElementById('provider-reg').style.display="block";
-
-          }
-
-          function showProviderView2() {
-
-            document.getElementById('register').style.display="none";
-            document.getElementById('landing').style.display="none";
-            document.getElementById('provider-reg').style.display="none";
-            document.getElementById('provider-reg-2').style.display="block";
-
-          }
-
-          function showUserView() {
-
-            document.getElementById('register').style.display="none";
-            document.getElementById('landing').style.display="none";
-            document.getElementById('provider-reg').style.display="none";
-            document.getElementById('provider-reg-2').style.display="none";
-            document.getElementById('user-reg').style.display="block";
-
-          }
-
-          function showloginView () {
-
-            document.getElementById('register').style.display="none";
-            document.getElementById('landing').style.display="none";
-            document.getElementById('provider-reg').style.display="none";
-            document.getElementById('provider-reg-2').style.display="none";
-            document.getElementById('user-reg').style.display="none";
-            document.getElementById('login-view').style.display="block";
-
-
-          }
-
-
-
-
-
-        </script>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css"/>
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>My First App</title>
     </head>
     <body>
-      <img src="img/header.png" width="100%" />
-      <!-- landing view -->
-      <div name="landing"  id="landing">
-        <form name="landingfrm" id="landingfrm">
-          <input type="button" class="labwise-btn" value="Register" onclick="showRegisterView()"/>
-          <br/><br/>
-          <input type="button" class="labwise-btn" value="Login" onclick="showloginView()"/>
-          <br/><br/><br/><br/>
-          <input type="button" class="labwise-btn" value="Direct To Web" onclick="openWebsite()"/>
-        </form>
-      </div>
-      <! -- registration choice view -->
-      <div name="register"  id="register" style="display:none">
-        <form name="registerfrm" id="registerfrm">
-          <input type="button" value="Provider" onclick="showProviderView()"/>
-          <br/><br/>
-          <input type="button" value="User" onclick="showUserView()"/>
-        </form>
-      </div>
-      <!-- provider registration view -->
-      <div name="provider-reg"  id="provider-reg" style="display:none">
-        <form name="provider-reg-frm" id="provider-reg-frm">
-          <p> <h3> What Services you provide </h3></p>
-          <input type="checkbox" name="lab" value="lab" > LAB <br>
-          <input type="checkbox" name="rmp" value="rmp" > RMP <br>
-          <input type="checkbox" name="nurse" value="nurse" > NURING <br>
-          <input type="checkbox" name="physio" value="physio" > PHYSIO <br>
-          <input type="checkbox" name="food" value="food" > Hi-FOOD <br>
-          <p> <input type="text" name="city" value="" placeholder="City Name" required> </p>
-          <p> <input type="text" name="area" value="" placeholder="Area Name" required> </p>
-          <p> <input type="text" name="pincode" value="" placeholder="Pin Code" required> </p>
-          <input class="btn btn-lg" type="button" value="Continue" onclick="showProviderView2()"/>
-        </form>
-      </div>
 
-      <!-- provider registration view 2 -->
-      <div name="provider-reg-2"  id="provider-reg-2" style="display:none">
-        <form name="provider-reg-frm-2" id="provider-reg-frm-2">
-          <p> <input type="text" name="pname" value="" placeholder="Provide Name" required> </p>
-          <p> <input type="email" name="email" value="" placeholder="Email" required> </p>
-          <p> <input type="tel" name="mobile" value="" placeholder="Mobile" required> </p>
-          <p> <input type="passwd" name="passwd" value="" placeholder="Create Password" required> </p>
-          <input class="btn btn-lg" type="button" value="Save" onclick="saveProvider()"/>
-        </form>
-      </div>
+        <div class="container-fluid" ng-view>
 
-      <!-- user  registration view -->
-      <div name="user-reg"  id="user-reg" style="display:none">
-        <form name="user-reg-frm" id="user-reg-frm">
-          <p> <input type="text" name="name" value="" placeholder="Name" required> </p>
-          <p> <input type="email" name="email" value="" placeholder="Email" required> </p>
-          <p> <input type="tel" name="mobile" value="" placeholder="Mobile" required> </p>
-          <p> <input type="passwd" name="passwd" value="" placeholder="Create Password" required> </p>
-          <input class="btn btn-lg" type="button" value="Save" onclick="saveUser()"/>
-        </form>
-      </div>
+        </div>
+        <script type="text/javascript" src="cordova.js"></script>
 
-      <!-- user  registration view -->
-      <div name="login-view"  id="login-view" style="display:none">
-        <form name="login-frm" id="login-frm">
-          <p> <input type="text" name="username" value="" placeholder="Email or Mobile" required> </p>
-          <p> <input type="passwd" name="passwd" value="" placeholder="Password" required> </p>
-          <input type="button" value="Login" onclick="login()"/>
-        </form>
-      </div>
+        <script type="text/javascript" src="js/libs/jquery-1.11.2.min.js"></script>
+        <script type="text/javascript" src="js/libs/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/libs/angular.min.js"></script>
+        <script type="text/javascript" src="js/libs/angular-route.min.js"></script>
+        <script type="text/javascript" src="js/libs/ui-bootstrap-tpls-0.11.0.min.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript" src="js/angular/routes.js"></script>
+        <script type="text/javascript" src="js/angular/controller.js"></script>
 
 
+        <script type="text/javascript">
+            app.initialize();
+        </script>
     </body>
 </html>

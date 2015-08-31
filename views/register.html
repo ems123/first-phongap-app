@@ -1,0 +1,56 @@
+<div class="container">
+<div class="page-header">
+<h3 class="text-center">CHOOSE</h3>
+</div>
+<div ng-show="chooseTrue">
+
+    <div class="row">
+        <div class="col-xs-12">
+          <button type="button" class="btn btn-primary btn-lg btn-block" data-ng-click="providerSelected()">Service Provider</button>
+        </div>
+      </div>
+    <br></br>
+    <div class="row">
+        <div class="col-xs-12">
+          <button type="button" class="btn btn-primary btn-lg btn-block" data-ng-click="userSelected()">User</button>
+        </div>
+      </div>
+    <br></br>
+</div>
+
+<!-- provider view -->
+<div ng-show="providerView">
+  <div class="row col-xs-12" name="provider-reg"  id="provider-reg">
+    <form name="provider-reg-frm" id="provider-reg-frm">
+      <div class="input-group">
+        <div class="checkbox">
+          <label><input type="checkbox" value="lab" ng-model="lab"/>LAB</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" value="rmp" ng-model="rmp" />RMP</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" value="nurse" ng-model="nurse" />NURSE</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" value="physio" ng-model="physio" />PHYSIO</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" value="food" ng-model="food" />Hi-FOOD</label>
+        </div>
+      </div>
+      <div class="input-group">
+        <input type="text" name="city" ng-model="city" value="" placeholder="City Name" />
+        <input type="text" name="area" value="" ng-model="area" placeholder="Area Name" />
+        <input type="text" name="pincode" value="" ng-model="pincode" placeholder="Pin Code"/>
+      </div>
+
+      <div class="row">
+        <button type="button" class="btn btn-primary btn-lg btn-block" ng-click="submitProvideFormView1()">Continue</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- container -->
+</div>
