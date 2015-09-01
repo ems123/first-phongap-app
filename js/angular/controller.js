@@ -206,7 +206,13 @@ myFirstApp.controller('loginController', ['$scope', '$location', '$route', '$win
 
     $scope.lPromise.then(function(u) {
         //success callback
-        console.log('After login ' + JSON.stringify(u));
+        console.log('After login ' + JSON.stringify(u.result.user));
+        var user = u.result.user;
+        if(user.userType === 'user') {
+          $location.path('/user-area');
+        } else if(user.userType === 'sp') {
+          $location.path('/provider-area');
+        }
 
 
         //$location.path('/user-area');
