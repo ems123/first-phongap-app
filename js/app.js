@@ -1,4 +1,4 @@
-var myFirstApp = angular.module('myFirstApp', ['ngRoute','ui.bootstrap']);
+var myFirstApp = angular.module('myFirstApp', ['ngRoute','ui.bootstrap' ]);
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
