@@ -31,7 +31,7 @@
 
 <!-- provider view -->
 
-  <div class="row col-xs-12" name="provider-reg"  id="provider-reg" style="margin-left: auto; margin-right: auto;">
+  <div class="row col-xs-12" name="provider-reg"  id="provider-reg" style="margin-left: auto; margin-right: 25%;">
     <form name="provider-reg-frm" id="provider-reg-frm">
       <div ng-show="providerView">
         <div class="form-group" >
@@ -68,7 +68,7 @@
           <input class="form-control input-lg" type="text" name="pincode" ng-model="pincode" placeholder="Pin Code" required/>
         </div>
       </div>
-    <div class="row">
+    <div class="row col-xs-offset-1 col-xs-8">
       <button type="button" class="btn btn-primary btn-block" ng-click="submitProvideFormView1()">Continue</button>
     </div>
   </div>
@@ -94,7 +94,7 @@
           <input class="form-control input-lg" type="password" name="passwd" ng-model="passwd" placeholder="Create Password" required/>
         </div>
       </div>
-      <div class="row">
+      <div class="row col-xs-offset-1 col-xs-8">
         <button type="button" class="btn btn-primary btn-block" ng-click="saveProvider()">Save</button>
       </div>
     </div>
@@ -102,9 +102,9 @@
   </div>
     <!-- user registration form -->
 
-    <div class="row col-xs-12" name="user-reg"  id="user-reg" ng-show="userView">
+    <div class="row col-xs-12" name="user-reg"  id="user-reg" ng-show="userView" style="margin-left: auto; margin-right: 25%;">
       <form name="user-reg-frm" id="user-reg-frm">
-        <div class="form-group" >
+        <div class="form-group">
           <div class="input-group">
             <input class="form-control input-lg" type="text" name="name"  required ng-model="name" placeholder="Name" />
           </div>
@@ -119,17 +119,19 @@
               <input class="form-control input-lg" type="text" name="mobile" ng-model="mobile" placeholder="Mobile" required />
             </div>
           </div>
+
           <div class="form-group" >
             <div class="input-group">
               <input class="form-control input-lg" type="password" name="passwd" ng-model="passwd" placeholder="Create Password" required/>
             </div>
           </div>
-          <div class="row">
+
+          <div class="row col-xs-offset-1 col-xs-8">
             <button type="button" class="btn btn-primary btn-block" ng-click="saveUser()">Save</button>
           </div>
+        </form>
       </div>
-      </form>
-    </div>
+
 
 <!-- container -->
 </div>

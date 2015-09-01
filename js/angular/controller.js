@@ -7,7 +7,8 @@ myFirstApp.controller('mainController', ['$scope', '$route', '$window','userServ
 
 }]);
 
-myFirstApp.controller('registerController', ['$scope', '$location', '$route', '$window','userService', function($scope, $location, $route, $window, userService){
+myFirstApp.controller('registerController', ['$scope', '$location', '$route', '$window','userService',
+  function($scope, $location, $route, $window, userService){
 
   $scope.chooseTrue = true;
   $scope.providerView = false;
@@ -47,9 +48,6 @@ myFirstApp.controller('registerController', ['$scope', '$location', '$route', '$
     $scope.chooseTrue = false;
     $scope.providerView = false;
     $scope.providerView2 = true;
-
-
-
 
   };
 
@@ -119,10 +117,6 @@ myFirstApp.controller('registerController', ['$scope', '$location', '$route', '$
 
       });
 
-
-
-
-
   }
 
   $scope.saveUser = function () {
@@ -149,13 +143,45 @@ myFirstApp.controller('registerController', ['$scope', '$location', '$route', '$
       return;
     }
 
+    var payload = {};
+    payload.email = email;
+    payload.mobile = mobile;
+    payload.username = $scope.name;
+    payload.passwd = $scope.passwd;
+    payload.userType = 'user';
+
+
+    console.log(payload);
+
+    $scope.lPromise = userService.signup(payload);
+
+    $scope.lPromise.then(function(u) {
+        //success callback
+        console.log('After signup ' + JSON.stringify(u));
+
+        $location.path('/user-area');
+      }, function(r) {
+          //error callback
+        console.log('Signup failed ' + JSON.stringify(r));
+        $scope.errMsg = r.msg;
+        //on failure reset the captcha widget as it can't be re-used
+
+      }, function(s) {
+        $scope.lMessage = s;
+      }).finally(function() {
+        //google recaptcha causes input element
+        //in IE not to display any updated text.
+        //setting focus() seems to fix this issue
+
+      });
 
   }
 
 }]);
 
 
-myFirstApp.controller('loginController', function($scope, $route){
+myFirstApp.controller('loginController', ['$scope', '$location', '$route', '$window','userService',
+  function($scope, $location, $route, $window, userService){
 
   $scope.logon = function () {
 
@@ -173,12 +199,47 @@ myFirstApp.controller('loginController', function($scope, $route){
       alert('Please enter a valid email or 10 digit mobile');
       return;
     }
+
+
+    $scope.lPromise = userService.login(login, $scope.passwd);
+
+    $scope.lPromise.then(function(u) {
+        //success callback
+        console.log('After login ' + JSON.stringify(u));
+
+
+        //$location.path('/user-area');
+      }, function(r) {
+          //error callback
+        console.log('Login failed ' + JSON.stringify(r));
+        alert('Unable Login : ' + r.msg);
+        //$scope.errMsg = r.msg;
+        //on failure reset the captcha widget as it can't be re-used
+
+      }, function(s) {
+        $scope.lMessage = s;
+      }).finally(function() {
+        //google recaptcha causes input element
+        //in IE not to display any updated text.
+        //setting focus() seems to fix this issue
+
+      });
+  }
+
+}]);
+
+
+myFirstApp.controller('providerController', function($scope, $route, $window){
+
+  $scope.proceed = function () {
+    $window.open('http://labwise.in', '_blank');
+
   }
 
 });
 
 
-myFirstApp.controller('providerController', function($scope, $route){
+myFirstApp.controller('userController', function($scope, $route, $window){
 
   $scope.proceed = function () {
     $window.open('http://labwise.in', '_blank');

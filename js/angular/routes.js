@@ -17,6 +17,10 @@ myFirstApp.config(['$routeProvider',
         templateUrl: 'views/provider-area.html',
         controller: 'providerController'
       }).
+      when('/user-area', {
+        templateUrl: 'views/user-area.html',
+        controller: 'userController'
+      }).
       when('/about', {
         templateUrl: 'views/about.html'
       }).
