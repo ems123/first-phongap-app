@@ -100,11 +100,11 @@ myFirstApp.controller('registerController', ['$scope', '$location', '$route', '$
     $scope.lPromise.then(function(u) {
         //success callback
         console.log('After signup ' + JSON.stringify(u));
-
         $location.path('/provider-area');
       }, function(r) {
           //error callback
         console.log('Signup failed ' + JSON.stringify(r));
+        alert('Unable to Signup :' + r.msg);
         $scope.errMsg = r.msg;
         //on failure reset the captcha widget as it can't be re-used
 
@@ -163,6 +163,7 @@ myFirstApp.controller('registerController', ['$scope', '$location', '$route', '$
       }, function(r) {
           //error callback
         console.log('Signup failed ' + JSON.stringify(r));
+        alert('Unable to Signup :' + r.msg);
         $scope.errMsg = r.msg;
         //on failure reset the captcha widget as it can't be re-used
 
@@ -212,7 +213,7 @@ myFirstApp.controller('loginController', ['$scope', '$location', '$route', '$win
       }, function(r) {
           //error callback
         console.log('Login failed ' + JSON.stringify(r));
-        alert('Unable Login : ' + r.msg);
+        alert('Login Failed : ' + r.msg);
         //$scope.errMsg = r.msg;
         //on failure reset the captcha widget as it can't be re-used
 
