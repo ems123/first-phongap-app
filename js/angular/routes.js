@@ -13,6 +13,10 @@ myFirstApp.config(['$routeProvider',
         templateUrl: 'views/login.html',
         controller: 'loginController'
       }).
+      when('/provider-area', {
+        templateUrl: 'views/provider-area.html',
+        controller: 'providerController'
+      }).
       when('/about', {
         templateUrl: 'views/about.html'
       }).

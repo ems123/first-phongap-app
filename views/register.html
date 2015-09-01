@@ -17,13 +17,13 @@
 
     <div class="row">
         <div class="col-xs-12">
-          <button type="button" class="btn btn-primary btn-lg btn-block" data-ng-click="providerSelected()">Service Provider</button>
+          <button type="button" class="btn btn-primary btn-lg btn-block" data-ng-click="providerSelected()">SERVICE PROVIDER</button>
         </div>
       </div>
     <br></br>
     <div class="row">
         <div class="col-xs-12">
-          <button type="button" class="btn btn-primary btn-lg btn-block" data-ng-click="userSelected()">User</button>
+          <button type="button" class="btn btn-primary btn-lg btn-block" data-ng-click="userSelected()">USER</button>
         </div>
       </div>
     <br></br>
@@ -31,7 +31,7 @@
 
 <!-- provider view -->
 
-  <div class="row col-xs-14" name="provider-reg"  id="provider-reg">
+  <div class="row col-xs-12" name="provider-reg"  id="provider-reg" style="margin-left: auto; margin-right: auto;">
     <form name="provider-reg-frm" id="provider-reg-frm">
       <div ng-show="providerView">
         <div class="form-group" >
@@ -55,7 +55,6 @@
       </div>
       <div class="form-group">
         <div class="input-group">
-          <label for="city"></label>
           <input class="form-control input-lg" type="text" name="city" ng-model="city"  placeholder="City Name" required/>
         </div>
       </div>
@@ -107,22 +106,22 @@
       <form name="user-reg-frm" id="user-reg-frm">
         <div class="form-group" >
           <div class="input-group">
-            <input class="form-control input-lg" type="text" name="ame"  required ng-model="name" placeholder="Name" />
+            <input class="form-control input-lg" type="text" name="name"  required ng-model="name" placeholder="Name" />
           </div>
           </div>
           <div class="form-group" >
             <div class="input-group">
-              <input class="form-control input-lg" type="email" name="email" ng-model="email" placeholder="Email" required />
+              <input class="form-control input-lg" type="text" name="email" ng-model="email" placeholder="Email" required />
             </div>
           </div>
           <div class="form-group" >
             <div class="input-group">
-              <input class="form-control input-lg" type="tel" name="mobile" ng-model="mobile" placeholder="Mobile" required ng-maxlength="10" ng-minlength="10" required/>
+              <input class="form-control input-lg" type="text" name="mobile" ng-model="mobile" placeholder="Mobile" required />
             </div>
           </div>
           <div class="form-group" >
             <div class="input-group">
-              <input class="form-control input-lg" type="text" name="passwd" ng-model="passwd" placeholder="Create Password" required/>
+              <input class="form-control input-lg" type="password" name="passwd" ng-model="passwd" placeholder="Create Password" required/>
             </div>
           </div>
           <div class="row">
