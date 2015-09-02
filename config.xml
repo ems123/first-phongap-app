@@ -5,10 +5,10 @@
         versionCode = "10"
         version     = "1.1.0">
 
-    <name>Hi-Cloud</name>
+    <name>labwise</name>
 
     <description>
-      Hi-Cloud - Cloud for Health Care
+      LABWISE - Cloud for Health Care
     </description>
 
     <author href="http://labwise.in" email="contact@labwise.in">
