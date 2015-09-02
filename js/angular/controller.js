@@ -206,11 +206,11 @@ myFirstApp.controller('loginController', ['$scope', '$location', '$route', '$win
 
     $scope.lPromise.then(function(u) {
         //success callback
-        console.log('After login ' + JSON.stringify(u.result.user));
-        var user = u.result.user;
-        if(user.userType === 'user') {
+        console.log('After login ' + JSON.stringify(u));
+
+        if(u.userType === 'user') {
           $location.path('/user-area');
-        } else if(user.userType === 'sp') {
+        } else if(u.userType === 'sp') {
           $location.path('/provider-area');
         }
 
@@ -246,11 +246,51 @@ myFirstApp.controller('providerController', function($scope, $route, $window){
 });
 
 
-myFirstApp.controller('userController', function($scope, $route, $window){
+myFirstApp.controller('userController', ['$scope', '$route', '$window', 'userService', function($scope, $route, $window, userService){
+
+
+  $scope.service_list = [
+    {id:1, name:'LAB', },
+    {id:2, name:'NURSE'},
+    {id:3, name:'PHYSIO'},
+    {id:4, name:'Hi-FOOD'}
+
+  ];
+  $scope.service_name = $scope.service_list[2];
+
+  $scope.isLoggedIn = false;
+  $scope.quickBook = false;
+  $scope.labServiceSelected = false;
+  var user = userService.getUser();
+  $scope.isLoggedIn = user.isLoggedIn;
+
+
+  $scope.quickBookForm = function() {
+    $scope.quickBook = true;
+    $scope.labServiceSelected = false;
+    return;
+  }
 
   $scope.proceed = function () {
     $window.open('http://labwise.in', '_blank');
 
   }
 
-});
+  $scope.serviceSelected = function (value) {
+    console.log(value);
+    if(value.name == "LAB") {
+      $scope.labServiceSelected = true;
+    } else {
+      $scope.labServiceSelected = false;
+    }
+
+    return;
+  }
+
+  $scope.submitQuickBook = function() {
+    alert('You booking has been received.')
+    $scope.quickBook = false;
+
+  }
+
+}]);

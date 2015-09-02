@@ -5,7 +5,7 @@ angular.module('myFirstApp')
     // AngularJS will instantiate a singleton by calling "new" on this function
 
 
-    var _defUser = {  //Default user object
+    var user = {  //Default user object
           'isLoggedIn' : false,
           'username': '',
           'email': '',
@@ -14,11 +14,56 @@ angular.module('myFirstApp')
           'sToken': '',
           'firstName': '',
           'lastName': '',
-          'initials': '',
-          },
-        user = {};    //cached user info
+          'userType': '',
+        };
+        //user = {};    //cached user info
     //Using merge for recursive copy and avoid object reference
-    //angular.merge(user, _defUser);
+     //angular.merge(user, _defUser);
+
+
+    //Update user info from Parse API response
+  function _updateLoggedInStatus() {
+
+    var bOldStatus = user.isLoggedIn;
+    user.isLoggedIn = ( (user.email.length && user.emailVerified) || (user.mobile.length && user.mobileVerified));
+    if(bOldStatus === user.isLoggedIn) {
+      //no status change
+      return;
+    }
+    //user status is changed
+    var userId = null;
+    if(user.isLoggedIn && user.oID.length) {
+      userId = user.oID;
+    }
+
+  }
+
+   function _updateUserInfo(u, bNotify) {
+
+     if(angular.isUndefined(bNotify)) {
+       bNotify = true;
+     }
+
+     //store old stoken
+     var oldSToken = user.sToken;
+
+     user.email = u.email || '';
+     user.mobile = u.mobile || '';
+     user.name = u.username || '';
+     user.oID = u.objectId;
+     user.sToken = u.session || user.sToken;
+     user.emailVerified = u.emailVerified;
+     user.mobileVerified = u.mobileVerified || false;
+     user.userType = u.userType;
+
+     _updateLoggedInStatus();
+
+     if(bNotify) {
+       //_userStatusNotify();
+     }
+   }
+
+
 
     function ObjResult(sts, code, swCode, msg) {
       this.sts = sts || false;
@@ -123,6 +168,7 @@ angular.module('myFirstApp')
             d.reject(ret);
           }
         /*Update all user info*/
+        _updateUserInfo(data.result.user);
         ret.sts = true;
         d.resolve(user);
       }).catch(function(r){
@@ -182,7 +228,7 @@ angular.module('myFirstApp')
           d.reject(ret);
         }
         /*Update all user info*/
-      //  _updateUserInfo(data.result.user);
+        _updateUserInfo(data.result.user);
         ret.sts = true;
         d.resolve(user);
       }).catch(function(r){
