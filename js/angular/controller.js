@@ -250,10 +250,12 @@ myFirstApp.controller('userController', ['$scope', '$route', '$window', 'userSer
 
 
   $scope.service_list = [
-    {id:1, name:'LAB', },
-    {id:2, name:'NURSE'},
-    {id:3, name:'PHYSIO'},
-    {id:4, name:'Hi-FOOD'}
+    {id:1, name:'LAB'},
+    {id:2, name:'PHARMACY'},
+    {id:3, name:'RMP'},
+    {id:4, name:'NURSE'},
+    {id:5, name:'PHYSIO'},
+    {id:6, name:'Hi-FOOD'}
 
   ];
   $scope.service_name = $scope.service_list[2];
@@ -261,6 +263,8 @@ myFirstApp.controller('userController', ['$scope', '$route', '$window', 'userSer
   $scope.isLoggedIn = false;
   $scope.quickBook = false;
   $scope.labServiceSelected = false;
+  $scope.pharmacyServiceSelected = false;
+  $scope.isUpdateUserAddress = false;
   var user = userService.getUser();
   $scope.isLoggedIn = user.isLoggedIn;
 
@@ -276,19 +280,73 @@ myFirstApp.controller('userController', ['$scope', '$route', '$window', 'userSer
 
   }
 
+  $scope.updateMyAddress = function () {
+
+    $scope.isUpdateUserAddress = true;
+    console.log('update address:' + $scope.isUpdateUserAddress );
+
+    return;
+  }
+
+  $scope.updateAddress = function () {
+    console.log($scope.address);
+    console.log($scope.pincode);
+    $scope.isUpdateUserAddress = false;
+    return;
+
+  }
+
+  $scope.cancelUpdateAddress = function () {
+    $scope.isUpdateUserAddress = false;
+    return;
+
+  }
+
   $scope.serviceSelected = function (value) {
     console.log(value);
     if(value.name == "LAB") {
       $scope.labServiceSelected = true;
+      $scope.pharmacyServiceSelected = false;
+    } else if (value.name == "PHARMACY") {
+      $scope.labServiceSelected = false;
+      $scope.pharmacyServiceSelected = true;
+
     } else {
       $scope.labServiceSelected = false;
+      $scope.pharmacyServiceSelected = false;
     }
 
     return;
   }
 
+  $scope.upload = function(el) {
+    //console.log(el.files);
+    $scope.prescription_file = el.files[0];
+    /*
+    r = new FileReader();
+    r.onloadend = function(e){
+      var data = e.target.result;
+      console.log(data);
+      //send you binary data via $http or $resource or do anything else with it
+    }
+    r.readAsText($scope.prescription_file);*/
+  };
+
   $scope.submitQuickBook = function() {
-    alert('You booking has been received.')
+
+    if($scope.service_name.name == 'PHARMACY' ) {
+
+      if($scope.prescription_text == undefined && $scope.prescription_file == undefined) {
+        alert('Please upload presscription or enter medicine name.');
+        return;
+      }
+    } else if($scope.service_name.name == 'LAB' ) {
+      if($scope.lab_test == undefined) {
+        alert('Please enter test name.');
+        return;
+      }
+    }
+
     $scope.quickBook = false;
 
   }

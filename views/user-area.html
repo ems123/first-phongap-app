@@ -31,22 +31,51 @@
           <input class="form-control input-lg" type="text" name="lab_test" ng-model="lab_test" placeholder="Enter Test Name" required />
         </div>
       </div>
-      <div class="form-group" >
+      <div class="form-group" data-ng-show="pharmacyServiceSelected" >
         <div class="input-group">
-          <input class="form-control input-lg" type="text" name="mobile" ng-model="mobile" placeholder="Alternate Mobile" required />
+
+          <textarea class="form-control input-lg" placeholder="Enter Drug Name One per line" rows="2" id="prescription_text" name="prescription_text" ng-maxlength="100" ng-model="prescription_text" ></textarea>
+
+        </div>
+        <div class="input-group">
+          <label> OR upload prescription (only image/pdf) </label>
+          <input type="file" name="prescription_file" onchange="angular.element(this).scope().upload(this)" id="prescription_file" ng-model="prescription_file" />
+        </div>
+
+      </div>
+      <div class="form-group" >
+        <div class="input-group" data-ng-show="!isUpdateUserAddress">
+          <input class="form-control input-lg" type="text" name="pincode" ng-model="pincode" placeholder="Pin Code" required />
+          <p class="text-center" ><a class="btn btn-link" data-ng-click="updateMyAddress()"> Quickly Update My Address</a></p>
         </div>
       </div>
-
+      <div class="row" class="row col-xs-12" name="address-Form"  id="address-Form" data-ng-show="isUpdateUserAddress" >
+        <form name="addressForm" id="addressForm" >
+          <div class="form-group" >
+            <div class="input-group">
+              <input class="form-control input-lg" type="text" name="address" ng-model="address" placeholder="Address" required />
+            </div>
+          </div>
+          <div class="form-group" >
+            <div class="input-group">
+              <input class="form-control input-lg" type="text" name="pincode" ng-model="pincode" placeholder="Pin Code" required />
+            </div>
+          </div>
+          <div class="col-xs-8">
+            <p><a class="btn btn-link" data-ng-click="updateAddress()">Update</a><a class="btn btn-link" data-ng-click="cancelUpdateAddress()">Cancel</a></p>
+          </div>
+        </form>
+      </div>
       <div class="row col-xs-8">
         <button type="button" class="btn btn-primary btn-block" ng-click="submitQuickBook()">Submit</button>
       </div>
     </form>
     <br></br>
   </div>
-
+  
   <div>
     <div class="row col-xs-12">
-        <div class="col-xs-8">
+        <div class="col-xs-12">
           <button type="button" class="btn btn-primary btn-lg btn-block" data-ng-click="proceed()">Tools</button>
         </div>
       </div>
