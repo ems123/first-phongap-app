@@ -1,5 +1,5 @@
 'use strict';
-angular.module('myFirstApp')
+angular.module('labwiseApp')
   .service('userService', ['$q', '$log', '$timeout', '$window', 'Parse', function ($q, $log, $timeout, $window, Parse) {
 
     // AngularJS will instantiate a singleton by calling "new" on this function
@@ -15,6 +15,7 @@ angular.module('myFirstApp')
           'firstName': '',
           'lastName': '',
           'userType': '',
+          'address' : {},
         };
         //user = {};    //cached user info
     //Using merge for recursive copy and avoid object reference
@@ -247,12 +248,76 @@ angular.module('myFirstApp')
       return d.promise;
     }
 
+    function _createOrder(service, userId, orderInfo) {
+
+      //normalize input
+      service = service || '';
+      userId = userId || '';
+
+
+      var ret = _defResult(), d = $q.defer();
+
+      //input validation
+      //validation as per rule, should be done in the controller. We do
+      //minimum empty check here.
+      if(!userId.length ) {
+        ret.msg = 'Invalid input!';
+        //reject via timeout for indicator to receive rejection
+        $timeout(function() {
+          d.reject(ret);
+        }, 0);
+        return d.promise;
+      }
+
+      //set progress
+      //As this is before we return promise, wrap it in timeout
+      $timeout(function() {
+        d.notify('Creating Order');
+      }, 0);
+
+
+      var o = {
+        'service': service,
+        'userId': userId,
+        'orderInfo': orderInfo
+
+      };
+
+
+      Parse.save({api: 'createOrder'}, o).$promise.then(function(data){
+        $log.debug('createOrder response ' + JSON.stringify(data));
+        if(angular.isUndefined(data.result) || data.result.status !== 'success') {
+          d.reject(ret);
+        }
+        /*Update all user info*/
+        ret.sts = true;
+        d.resolve(data.result);
+      }).catch(function(r){
+        ret = _parseErrorResponse(r.data||r);
+        d.reject(ret);
+      }).finally(function(){
+        d.reject(ret);
+      }, function(s) {
+        //proxy the notification
+        if(angular.isString(s) && s.length) {
+          d.notify(s);
+        }
+      });
+
+      return d.promise;
+
+
+
+
+    }
+
 
     return {
       isLoggedIn: function() { return user.isLoggedIn; },
       getUser: function() {return user;},
       signup: _signup,
       login: _login,
+      createOrder : _createOrder,
 
 
     };

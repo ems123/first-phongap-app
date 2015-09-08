@@ -1,4 +1,4 @@
-myFirstApp.config(['$routeProvider',
+labwiseApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/', {

@@ -1,14 +1,68 @@
-myFirstApp.controller('mainController', ['$scope', '$route', '$window','userService', function($scope, $route, $window, userService ){
+labwiseApp.controller('mainController', ['$scope', '$route', '$window','$location', 'userService', function($scope, $route, $window, $location, userService ){
+
+
+  $scope.showWhyWeb = false;
+
+  var user = userService.getUser();
+
+  $scope.isUserLoggedIn = false;
+
+  if(user.isLoggedIn) {
+    console.log("User is logged in..")
+    $scope.isUserLoggedIn = true;
+    if(user.userType === 'user') {
+      $location.path('/user-area');
+    } else if (user.userType === 'sp') {
+      $location.path('/provider-area');
+    }
+  }
 
   $scope.openSite = function () {
     $window.open('http://labwise.in', '_blank');
-
   };
+
+  $scope.whyWeb = function () {
+    $scope.showWhyWeb = true;
+  }
+
+  $scope.gotitWeb = function () {
+    $scope.showWhyWeb = false;
+
+  }
+
+  $scope.whyLogin = function () {
+    $scope.showWhyLogin = true;
+  }
+
+  $scope.gotitLogin = function () {
+    $scope.showWhyLogin = false;
+
+  }
+
+  $scope.whyRegister = function () {
+    $scope.showWhyRegister = true;
+  }
+
+  $scope.gotitRegister = function () {
+    $scope.showWhyRegister = false;
+
+  }
 
 }]);
 
-myFirstApp.controller('registerController', ['$scope', '$location', '$route', '$window','userService',
+labwiseApp.controller('registerController', ['$scope', '$location', '$route', '$window','userService',
   function($scope, $location, $route, $window, userService){
+
+    var user = userService.getUser();
+    if(user.isLoggedIn) {
+
+      console.log("already logged in..");
+      if(user.userType === 'user') {
+        $location.path('/user-area');
+      } else if(user.userType === 'sp') {
+        $location.path('/provider-area');
+      }
+    }
 
   $scope.chooseTrue = true;
   $scope.providerView = false;
@@ -88,6 +142,7 @@ myFirstApp.controller('registerController', ['$scope', '$location', '$route', '$
     $scope.nurse ? payload.services.push('NURSE') : '';
     $scope.physio ? payload.services.push('PHYSIO') : '';
     $scope.food ? payload.services.push( 'FOOD' ) : '';
+    $scope.pharmacy ? payload.services.push( 'PHARMACY' ) : '';
     payload.city = $scope.city;
     payload.area = $scope.area;
     payload.pincode = $scope.pincode;
@@ -181,8 +236,19 @@ myFirstApp.controller('registerController', ['$scope', '$location', '$route', '$
 }]);
 
 
-myFirstApp.controller('loginController', ['$scope', '$location', '$route', '$window','userService',
+labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$window','userService',
   function($scope, $location, $route, $window, userService){
+
+  var user = userService.getUser();
+  if(user.isLoggedIn) {
+
+    console.log("already logged in..");
+    if(user.userType === 'user') {
+      $location.path('/user-area');
+    } else if(user.userType === 'sp') {
+      $location.path('/provider-area');
+    }
+  }
 
   $scope.logon = function () {
 
@@ -236,7 +302,7 @@ myFirstApp.controller('loginController', ['$scope', '$location', '$route', '$win
 }]);
 
 
-myFirstApp.controller('providerController', function($scope, $route, $window){
+labwiseApp.controller('providerController', function($scope, $route, $window){
 
   $scope.proceed = function () {
     $window.open('http://labwise.in', '_blank');
@@ -246,7 +312,7 @@ myFirstApp.controller('providerController', function($scope, $route, $window){
 });
 
 
-myFirstApp.controller('userController', ['$scope', '$route', '$window', 'userService', function($scope, $route, $window, userService){
+labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userService', function($scope, $route, $window, userService){
 
 
   $scope.service_list = [
@@ -262,6 +328,7 @@ myFirstApp.controller('userController', ['$scope', '$route', '$window', 'userSer
 
   $scope.isLoggedIn = false;
   $scope.quickBook = false;
+  $scope.getHiBits = false;
   $scope.labServiceSelected = false;
   $scope.pharmacyServiceSelected = false;
   $scope.isUpdateUserAddress = false;
@@ -334,21 +401,73 @@ myFirstApp.controller('userController', ['$scope', '$route', '$window', 'userSer
 
   $scope.submitQuickBook = function() {
 
+    var orderInfo = [];
     if($scope.service_name.name == 'PHARMACY' ) {
 
       if($scope.prescription_text == undefined && $scope.prescription_file == undefined) {
         alert('Please upload presscription or enter medicine name.');
         return;
       }
+      var pharamacy = {};
+      pharamacy.prescription_text = $scope.prescription_text ? $scope.prescription_text:'';
+      pharamacy.prescription_file = $scope.prescription_file ? $scope.prescription_file:'';
+      orderInfo.push({"phamracy":pharamacy});
+
     } else if($scope.service_name.name == 'LAB' ) {
       if($scope.lab_test == undefined) {
         alert('Please enter test name.');
         return;
       }
+      var lab = {};
+      lab.lab_test = $scope.lab_test ? $scope.lab_test : '';
+      orderInfo.push({"lab":lab});
     }
 
-    $scope.quickBook = false;
 
+    //create the order
+
+    var contactInfo = {};
+    contactInfo.address = $scope.address ? $scope.address :user.address.address;
+    contactInfo.pincode = $scope.pincode ? $scope.pincode : user.address.pincode;
+    contactInfo.mobile =  $scope.mobile ? $scope.mobile : user.mobile;
+    contactInfo.email = user.email;
+
+    orderInfo.push({"contactInfo":contactInfo});
+    console.log($scope.service_name.name + ' ' + user.oID + ' ' + orderInfo );
+
+    $scope.lPromise  = userService.createOrder($scope.service_name.name, user.oID, orderInfo);
+    $scope.lPromise.then(function(o) {
+        //success callback
+        //console.log('After createOrder ' + JSON.stringify(o));
+
+        alert('You request has been submitted ');
+        $scope.quickBook = false;
+
+        //$location.path('/user-area');
+      }, function(r) {
+          //error callback
+        console.log('createOrder failed ' + JSON.stringify(r));
+        alert('createOrder Failed : ' + r.msg);
+        //$scope.errMsg = r.msg;
+        //on failure reset the captcha widget as it can't be re-used
+
+      }, function(s) {
+        $scope.lMessage = s;
+      }).finally(function() {
+
+      });
+
+
+  }
+
+  $scope.showHiBitsForm = function(){
+    $scope.getHiBits = true;
+    return;
+  }
+
+  $scope.getHiBitsForm = function () {
+
+    return;
   }
 
 }]);

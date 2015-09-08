@@ -1,5 +1,5 @@
 'use strict';
-angular.module('myFirstApp')
+angular.module('labwiseApp')
   .factory('Parse', ['$resource','$log', '$rootScope', '$window',
     function( $resource, $log, $scope, $window) {
 
@@ -33,7 +33,7 @@ angular.module('myFirstApp')
       var _updatedPayload = function(reqPayload) {
           reqPayload = reqPayload || {};
           //Add default value to the payload
-        
+
           return reqPayload;
       };
 
