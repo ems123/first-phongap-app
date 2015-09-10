@@ -304,10 +304,30 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
 
 labwiseApp.controller('providerController', function($scope, $route, $window){
 
+  $scope.sos = [
+    {id:1, name:'LAB'},
+    {id:2, name:'PHARMACY'},
+    {id:3, name:'RMP'},
+    {id:4, name:'NURSE'},
+    {id:5, name:'PHYSIO'},
+    {id:6, name:'Hi-FOOD'}
+
+  ];
+
+  
   $scope.proceed = function () {
     $window.open('http://labwise.in', '_blank');
+  }
+
+  $scope.viewOrdes = false;
+
+  $scope.showViewOrdersForm = function () {
+
+    $scope.viewOrders = true;
 
   }
+
+
 
 });
 
@@ -387,32 +407,69 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
   }
 
   $scope.upload = function(el) {
-    //console.log(el.files);
     $scope.prescription_file = el.files[0];
-    /*
-    r = new FileReader();
-    r.onloadend = function(e){
-      var data = e.target.result;
-      console.log(data);
-      //send you binary data via $http or $resource or do anything else with it
-    }
-    r.readAsText($scope.prescription_file);*/
+    console.log($scope.prescription_file);
+    var imageRegex = "image/(jpg|jpeg|png|bmp|gif)";
+    //var regex = /^1?([2-9]\d\d){2}\d{4}$/,
+    var fileTypeRegex = "application/(pdf)";
+    var ImageFileSizeKB = 1024;
+
+    if (!(new RegExp(imageRegex).test($scope.prescription_file.type)) && !(new RegExp(fileTypeRegex).test($scope.prescription_file.type))) {
+       console.log('Invalid file type ' + $scope.prescription_file.type);
+       alert("Invalid file type. Please upload a valid image file type (.jpg, .png, .bmp, .pdf)");
+
+       return true;
+     }
+
+     var fileSize = Math.round(parseInt($scope.prescription_file.size));
+     if(fileSize > (5120*1024)) {
+       console.log('File size is above limit ' + $scope.prescription_file.size);
+       alert("File size ids too large.Please upload 1 MB or less");
+       return true;
+     }
+
+
+  };
+
+
+  $scope.upload_bill = function(el) {
+
+
+    $scope.bill_file = el.files[0];
+    console.log($scope.bill_file);
+
+    var imageRegex = "image/(jpg|jpeg|png|bmp|gif)";
+    //var regex = /^1?([2-9]\d\d){2}\d{4}$/,
+    var fileTypeRegex = "application/(pdf)";
+    var ImageFileSizeKB = 1024;
+
+    if (!(new RegExp(imageRegex).test($scope.bill_file.type)) && !(new RegExp(fileTypeRegex).test($scope.bill_file.type))) {
+       console.log('Invalid file type ' + $scope.bill_file.type);
+       alert("Invalid file type. Please upload a valid image file type (.jpg, .png, .bmp, .pdf)");
+
+       return true;
+     }
+
+     var fileSize = Math.round(parseInt($scope.bill_file.size));
+     if(fileSize > (5120*1024)) {
+       console.log('File size is above limit ' + $scope.bill_file.size);
+       alert("File size ids too large.Please upload 1 MB or less");
+       return true;
+     }
+
   };
 
   $scope.submitQuickBook = function() {
 
     var orderInfo = [];
     if($scope.service_name.name == 'PHARMACY' ) {
-
       if($scope.prescription_text == undefined && $scope.prescription_file == undefined) {
         alert('Please upload presscription or enter medicine name.');
         return;
       }
       var pharamacy = {};
       pharamacy.prescription_text = $scope.prescription_text ? $scope.prescription_text:'';
-      pharamacy.prescription_file = $scope.prescription_file ? $scope.prescription_file:'';
-      orderInfo.push({"phamracy":pharamacy});
-
+      orderInfo.push({"pharmacy":pharamacy});
     } else if($scope.service_name.name == 'LAB' ) {
       if($scope.lab_test == undefined) {
         alert('Please enter test name.');
@@ -423,41 +480,51 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
       orderInfo.push({"lab":lab});
     }
 
-
     //create the order
-
     var contactInfo = {};
     contactInfo.address = $scope.address ? $scope.address :user.address.address;
     contactInfo.pincode = $scope.pincode ? $scope.pincode : user.address.pincode;
     contactInfo.mobile =  $scope.mobile ? $scope.mobile : user.mobile;
     contactInfo.email = user.email;
-
     orderInfo.push({"contactInfo":contactInfo});
-    console.log($scope.service_name.name + ' ' + user.oID + ' ' + orderInfo );
 
+    console.log($scope.service_name.name + ' ' + user.oID + ' ' + JSON.stringify(orderInfo) );
     $scope.lPromise  = userService.createOrder($scope.service_name.name, user.oID, orderInfo);
     $scope.lPromise.then(function(o) {
-        //success callback
-        //console.log('After createOrder ' + JSON.stringify(o));
 
+        console.log('After createOrder ' + JSON.stringify(o));
+        if($scope.prescription_file) {
+          $scope.lPromise = userService.uploadFile($scope.prescription_file);
+          $scope.lPromise.then(function(url) {
+              var serviceOrder = o.ServiceOrder;
+              serviceOrder.orderInfo[0].pharmacy.file_url = url;
+              console.log("updating order " + serviceOrder.objectId)
+              $scope.lPromise = userService.updateOrder(serviceOrder.objectId, serviceOrder.orderInfo);
+              $scope.lPromise.then(function(url) {
+              }, function(r) {
+                console.log('order update failed ' + JSON.stringify(r));
+              },function(s) {
+              }).finally(function() {
+              });
+              console.log('File url ' + JSON.stringify(url));
+            }, function(r) {
+              console.log('upload  failed ' + JSON.stringify(r));
+              alert('upload Failed : ' + r.msg);
+            }, function(s) {
+              $scope.lMessage = s;
+            }).finally(function() {
+            });
+        }
         alert('You request has been submitted ');
         $scope.quickBook = false;
-
-        //$location.path('/user-area');
       }, function(r) {
-          //error callback
+
         console.log('createOrder failed ' + JSON.stringify(r));
         alert('createOrder Failed : ' + r.msg);
-        //$scope.errMsg = r.msg;
-        //on failure reset the captcha widget as it can't be re-used
-
       }, function(s) {
         $scope.lMessage = s;
       }).finally(function() {
-
       });
-
-
   }
 
   $scope.showHiBitsForm = function(){
@@ -465,7 +532,45 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
     return;
   }
 
-  $scope.getHiBitsForm = function () {
+  $scope.submitHiBitsForm = function () {
+
+    var orderInfo = [];
+    var hibits = {};
+    hibits.amount = $scope.amount;
+    orderInfo.push({"hibits":hibits});
+
+    console.log($scope.service_name.name + ' ' + user.oID + ' ' + JSON.stringify(orderInfo) );
+    $scope.lPromise  = userService.createOrder($scope.service_name.name, user.oID, orderInfo, 'hibits');
+    $scope.lPromise.then(function(o) {
+      if($scope.bill_file) {
+          $scope.lPromise = userService.uploadFile($scope.bill_file);
+          $scope.lPromise.then(function(url) {
+              var serviceOrder = o.ServiceOrder;
+              serviceOrder.orderInfo[0].hibits.file_url = url;
+              console.log("updating order " + serviceOrder.objectId)
+              $scope.lPromise = userService.updateOrder(serviceOrder.objectId, serviceOrder.orderInfo);
+              $scope.lPromise.then(function(url) {
+
+              }, function(r) {
+              },function(s) {
+              }).finally(function() {
+              });
+
+            }, function(r) {
+              alert('upload Failed : ' + r.msg);
+            }, function(s) {
+              $scope.lMessage = s;
+            }).finally(function() {
+            });
+        }
+        alert('You request has been submitted ');
+        $scope.getHiBits = false;
+      }, function(r) {
+        alert('createOrder Failed : ' + r.msg);
+      }, function(s) {
+        $scope.lMessage = s;
+      }).finally(function() {
+      });
 
     return;
   }

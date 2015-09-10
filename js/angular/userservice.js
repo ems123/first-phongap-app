@@ -248,11 +248,12 @@ angular.module('labwiseApp')
       return d.promise;
     }
 
-    function _createOrder(service, userId, orderInfo) {
+    function _createOrder(service, userId, orderInfo, orderType) {
 
       //normalize input
       service = service || '';
       userId = userId || '';
+      orderType = orderType || 'service'
 
 
       var ret = _defResult(), d = $q.defer();
@@ -279,10 +280,10 @@ angular.module('labwiseApp')
       var o = {
         'service': service,
         'userId': userId,
-        'orderInfo': orderInfo
+        'orderInfo': orderInfo,
+        'orderType' : orderType
 
       };
-
 
       Parse.save({api: 'createOrder'}, o).$promise.then(function(data){
         $log.debug('createOrder response ' + JSON.stringify(data));
@@ -311,6 +312,84 @@ angular.module('labwiseApp')
 
     }
 
+    function _uploadFile(file) {
+
+      //console.log(file);
+
+      var ret = _defResult(), d = $q.defer();
+
+      Parse.upload({api: file.name}, file).$promise.then(function(data){
+        $log.debug('uploadFile response ' + JSON.stringify(data.url));
+      /*Update all user info*/
+        ret.sts = true;
+        d.resolve(data.url);
+      }).catch(function(r){
+        ret = _parseErrorResponse(r.data||r);
+        d.reject(ret);
+      }).finally(function(){
+        d.reject(ret);
+      }, function(s) {
+        //proxy the notification
+        if(angular.isString(s) && s.length) {
+          d.notify(s);
+        }
+      });
+
+      return d.promise
+
+    }
+
+    function _updateOrder(soid, orderinfo, contactInfo, status) {
+
+      var id = soid || '';
+      var orderInfo = orderinfo ||'';
+      var contactInfo = contactInfo ||'';
+      var status = status ||'';
+
+      var ret = _defResult(), d = $q.defer();
+
+      if(!id.length || (!orderInfo.length && !contactInfo.length && !status.length)) {
+        ret.msg = 'Invalid input!';
+        //reject via timeout for indicator to receive rejection
+        $timeout(function() {
+          d.reject(ret);
+        }, 0);
+        return d.promise;
+    }
+
+
+      var o = {'id':soid,
+              'orderInfo' : orderInfo,
+              'contactInfo': contactInfo,
+              'status': status
+      };
+
+       var ret = _defResult(), d = $q.defer();
+       Parse.save({api: 'updateOrder'}, o).$promise.then(function(data){
+          $log.debug('UpdateOrder response ' + JSON.stringify(data));
+          if(angular.isUndefined(data.result) || data.result.status !== 'success') {
+            d.reject(ret);
+          }
+          /*Update all user info*/
+          ret.sts = true;
+          d.resolve(data.result);
+        }).catch(function(r){
+          ret = _parseErrorResponse(r.data||r);
+          d.reject(ret);
+        }).finally(function(){
+          d.reject(ret);
+        }, function(s) {
+          //proxy the notification
+          if(angular.isString(s) && s.length) {
+            d.notify(s);
+          }
+        });
+
+        return d.promise;
+
+
+    }
+
 
     return {
       isLoggedIn: function() { return user.isLoggedIn; },
@@ -318,6 +397,8 @@ angular.module('labwiseApp')
       signup: _signup,
       login: _login,
       createOrder : _createOrder,
+      uploadFile : _uploadFile,
+      updateOrder : _updateOrder,
 
 
     };

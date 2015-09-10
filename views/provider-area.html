@@ -4,17 +4,53 @@
           <img class="img-responsive" src="img/ac_logo.png" style="margin-left: auto; margin-right: auto;"/>
       </div>
   </div>
-  <div class="page-header">
+  <div class="page-header" data-ng-hide="isLoggedIn">
     <h3 class="text-center">WELCOME TO LABWISE CLOUD</h3>
     <h4 class="text-center"> We will verify your details and comeback to you soon...</h4>
   </div>
-
-  <div>
-
-    <div class="row">
+  <div class="page-header" data-ng-show="isLoggedIn">
+    <h3 class="text-center">WELCOME TO LABWISE CLOUD</h3>
+    <h4 class="text-center"> Service Provider Area</h4>
+  </div>
+<div>
+  <div class="row" data-ng-hide="viewOrders">
+      <div class="col-xs-12">
+        <button type="button" class="btn btn-primary btn-lg btn-block" data-ng-click="showViewOrdersForm()">VIEW ORDERS</button>
+      </div>
+    </div>
+  <br></br>
+</div>
+<div>
+    <div class="row" data-ng-hide="viewOrders">
         <div class="col-xs-12">
           <button type="button" class="btn btn-primary btn-lg btn-block" data-ng-click="proceed()">PROCEED TO MAIN SITE</button>
         </div>
       </div>
     <br></br>
+</div>
+<!-- view orders -->
+
+<div class="row col-xs-12" name="view-orders"  id="view-orders" data-ng-show="viewOrders" style="margin-left: 25%; margin-right: 25%;">
+  <form name="view-orders-frm" id="view-orders-frm">
+    <table class="col-xs-12 table table-striped">
+      <thead>
+        <tr >
+          <th>Order Id</th>
+          <th>User Name</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="so in sos">
+          <td>{{so.id}}</td>
+          <td>{{so.name}}</td>
+          <td>john@example.com</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="row col-xs-8">
+        <button type="button" class="btn btn-primary btn-block" ng-click="backToMainMenu()">BACK</button>
+    </div>
+  </form>
+  <br></br>
 </div>

@@ -98,12 +98,12 @@
         </div>
         <div class="form-group" >
           <div class="input-group">
-            <input type="file" name="bill" onchange="angular.element(this).scope().upload(this)" id="bill" ng-model="bill" />
+            <input type="file" name="bill" onchange="angular.element(this).scope().upload_bill(this)" id="bill" accept="image/jpg, image/JPG,image/JPEG, image/jpegm, application/pdf" ng-model="bill_file" />
             <p> Upload your bill (only image/pdf)</p>
           </div>
         </div>
         <div class="row col-xs-8">
-          <button type="button" class="btn btn-primary btn-block" ng-click="submitHiBits()">Submit</button>
+          <button type="button" class="btn btn-primary btn-block" ng-click="submitHiBitsForm()">Submit</button>
         </div>
       </form>
       <br></br>

@@ -16,9 +16,9 @@ angular.module('labwiseApp')
 
     var _reqHeaders = {
         'X-Parse-Application-Id' : 'KQLuPVBYy5fhT5OW4krFPI0HwRfsrlKdiiKszyFv',
-        'X-Parse-REST-API-Key' : 'baW2fPrwPkd4M0qkJkwg3MgcKUQnqawYr75O1tif',
-        'X-Parse-Session-Token' : _getSessionToken
-      };
+        'X-Parse-REST-API-Key' : 'baW2fPrwPkd4M0qkJkwg3MgcKUQnqawYr75O1tif'
+    };
+
 
 
       //For IE9 proxy parse request
@@ -28,7 +28,12 @@ angular.module('labwiseApp')
           save: { method : 'POST', headers : _reqHeaders, paramSerializer: '$httpParamSerializerJQLike'},
           query: { method: 'GET', headers: _reqHeaders, paramSerializer: '$httpParamSerializerJQLike'},
           put: { method: 'PUT', headers: _reqHeaders, paramSerializer: '$httpParamSerializerJQLike'}
+
         });
+
+      var _parseFileResource =  $resource(parseBaseURL + '/1/:object/:api', { object: 'files' }, {
+            save: { method : 'POST', headers : _reqHeaders, paramSerializer: '$httpParamSerializerJQLike'}
+      });
 
       var _updatedPayload = function(reqPayload) {
           reqPayload = reqPayload || {};
@@ -55,7 +60,17 @@ angular.module('labwiseApp')
             $log.debug('Required field params is undefined');
           }
           return _parseResource.put(params, _updatedPayload(reqPayload), success, error);
+        },
+        upload: function (params, reqPayload, success, error){
+          if(!params) {
+            $log.debug('Required field params is undefined');
+          }
+          _reqHeaders['Content-Type'] = reqPayload.type;
+          return _parseFileResource.save(params, _updatedPayload(reqPayload), success, error);
+
         }
+
+
       };
 
 
