@@ -771,7 +771,7 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
 
     if (!(new RegExp(imageRegex).test($scope.prescription_file.type)) && !(new RegExp(fileTypeRegex).test($scope.prescription_file.type))) {
        console.log('Invalid file type ' + $scope.prescription_file.type);
-       alert("Invalid file type ".$scope.prescription_file.type.". Please upload a valid image file type (.jpg, .png, .bmp, .pdf)");
+       alert("Invalid file type " + $scope.prescription_file.type +". Please upload a valid image file type (.jpg, .png, .bmp, .pdf)");
 
        return true;
      }
