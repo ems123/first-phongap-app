@@ -31,8 +31,8 @@
 
 <!-- provider view -->
 
-  <div class="row col-xs-12" ng-show="providerView" name="provider-reg"  id="provider-reg" style="margin-left: 25%; margin-right: 25%;">
-    <p><a href="#/login" btn-link> Already a member?Login </a></p>
+  <div class="row col-xs-12" ng-show="providerView || providerView2" name="provider-reg"  id="provider-reg" style="margin-left: 25%; margin-right: 25%;">
+    <p ng-show="providerView" ><a href="#/login" btn-link> Already a member?Login </a></p>
     <form name="provider-reg-frm" id="provider-reg-frm">
       <div ng-show="providerView">
         <div class="form-group" >

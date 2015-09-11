@@ -317,8 +317,11 @@ angular.module('labwiseApp')
       //console.log(file);
 
       var ret = _defResult(), d = $q.defer();
+      var file_name = file.name;
+      var file_name = file_name.replace( /[<>:"\/\\|%?*]+/g, '' );
+      $log.debug('file name after normalization ' + file_name);
 
-      Parse.upload({api: file.name}, file).$promise.then(function(data){
+      Parse.upload({api: file_name}, file).$promise.then(function(data){
         $log.debug('uploadFile response ' + JSON.stringify(data.url));
       /*Update all user info*/
         ret.sts = true;
