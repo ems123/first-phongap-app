@@ -631,32 +631,23 @@ labwiseApp.controller('providerController', function($scope, $route, $window){
 
 ];
   $scope.showOrderDetailsTrue = false;
-
   $scope.proceed = function () {
     $window.open('http://labwise.in', '_blank');
   }
-
   $scope.viewOrdes = false;
-
   $scope.showViewOrdersForm = function () {
-
     $scope.viewOrders = true;
-
   }
-
   $scope.showOrderDetails = function (soid) {
     console.log(soid);
     $scope.showOrderDetailsTrue = true;
     $scope.sso = $scope.sos[soid];
     return;
   }
-
   $scope.backToOrdersMenu = function () {
       $scope.showOrderDetailsTrue = false;
       return;
-
   }
-
   $scope.backToMainMenu = function () {
       $scope.viewOrders = false;
       $scope.showOrderDetailsTrue = false;
@@ -666,7 +657,6 @@ labwiseApp.controller('providerController', function($scope, $route, $window){
   $scope.completeOrder = function () {
     $scope.orderCompleteConfirm = true;
     return;
-
   }
 
   $scope.completeOrderConfirm = function (soid) {
@@ -674,15 +664,10 @@ labwiseApp.controller('providerController', function($scope, $route, $window){
     $scope.orderCompleteConfirm = false;
     return;
   }
-
   $scope.completeOrderCancel = function (soid) {
     $scope.orderCompleteConfirm = false;
     return;
   }
-
-
-
-
 
 });
 
