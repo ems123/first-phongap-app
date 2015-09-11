@@ -586,8 +586,8 @@ labwiseApp.controller('providerController', function($scope, $route, $window){
         "objectId": "jE3swKcL3m",
         "orderInfo": [
             {
-                "phamracy": {
-                    "prescription_file": "",
+                "pharmacy": {
+                    "file_url": "http://files.parsetfss.com/184010d4-7ced-4fb3-a884-3db7b4505203/tfss-bed0bfdf-c417-4854-a44f-39d41d7ccff4-image3A4616",
                     "prescription_text": "tablet\nsyrup\ngel"
                 }
             },
