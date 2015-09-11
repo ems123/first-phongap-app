@@ -65,7 +65,7 @@ angular.module('labwiseApp')
           if(!params) {
             $log.debug('Required field params is undefined');
           }
-          _reqHeaders['Content-Type'] = reqPayload.type;
+          _reqHeaders['Content-Type'] = reqPayload.type ? reqPayload.type : "image/jpg";
           return _parseFileResource.save(params, _updatedPayload(reqPayload), success, error);
 
         }

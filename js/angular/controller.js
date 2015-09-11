@@ -769,7 +769,7 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
     var fileTypeRegex = "application/(pdf)";
     var ImageFileSizeKB = 1024;
 
-    if (!(new RegExp(imageRegex).test($scope.prescription_file.type)) && !(new RegExp(fileTypeRegex).test($scope.prescription_file.type))) {
+    if ($scope.prescription_file.type.length && !(new RegExp(imageRegex).test($scope.prescription_file.type)) && !(new RegExp(fileTypeRegex).test($scope.prescription_file.type))) {
        console.log('Invalid file type ' + $scope.prescription_file.type);
        alert("Invalid file type " + $scope.prescription_file.type +". Please upload a valid image file type (.jpg, .png, .bmp, .pdf)");
 
