@@ -318,9 +318,11 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
 }]);
 
 
-labwiseApp.controller('providerController', function($scope, $route, $window){
+labwiseApp.controller('providerController',['$scope', '$location', '$route', '$window','userService',
+  function($scope, $location, $route, $window, userService){
 
-  $scope.sos =  [
+  $scope.sos =  [];
+  /*$scope.sos =  [
 	{
         "createdAt": "2015-09-10T10:23:58.062Z",
         "objectId": "K3gXkjUgyr",
@@ -642,14 +644,41 @@ labwiseApp.controller('providerController', function($scope, $route, $window){
         "userId": "DW0yg4kHC1"
     }
 
-];
+]; */
+  var u = localStorage.getItem('user');
+  var user = JSON.parse(u);
   $scope.showOrderDetailsTrue = false;
   $scope.proceed = function () {
     $window.open('http://labwise.in', '_blank');
   }
-  $scope.viewOrdes = false;
+
+  $scope.viewOrders = false;
+  $scope.fetchingOrders = false;
+
   $scope.showViewOrdersForm = function () {
+    $scope.fetchingOrders = true;
     $scope.viewOrders = true;
+
+    $scope.lpromise = userService.getSpOrders(user.oID);
+
+    $scope.lpromise.then(function (data) {
+
+      $scope.fetchingOrders = false;
+      //$scope.sos = userService.getSpOrderList();
+      data.sos.forEach(function(so) {
+        console.log('getSpOrder response ' + JSON.stringify(so));
+        $scope.sos.push(so);
+      });
+      console.log('orders fetched ' + $scope.sos);
+
+    }, function (err){
+      console.log('Unable fetch orders')
+    },function(s) {
+      $scope.lMessage = s;
+    }).finally(function() {
+    });
+
+    $scope.fetchingOrders = true;
   }
   $scope.showOrderDetails = function (soid) {
     console.log(soid);
@@ -682,7 +711,7 @@ labwiseApp.controller('providerController', function($scope, $route, $window){
     return;
   }
 
-});
+}]);
 
 
 labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userService', function($scope, $route, $window, userService){
@@ -697,9 +726,17 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
     {id:6, name:'Hi-FOOD'}
 
   ];
+  var u = localStorage.getItem('user');
+  var user = JSON.parse(u);
+
   $scope.service_name = $scope.service_list[2];
 
-  $scope.isLoggedIn = false;
+  if(user.isLoggedIn) {
+    $scope.isLoggedIn = true;
+  } else {
+    $scope.isLoggedIn = false;
+  }
+
   $scope.quickBook = false;
   $scope.getHiBits = false;
   $scope.labServiceSelected = false;

@@ -4,6 +4,7 @@ angular.module('labwiseApp')
 
     // AngularJS will instantiate a singleton by calling "new" on this function
 
+    var sos = [];
 
     var user = {  //Default user object
           'isLoggedIn' : false,
@@ -358,7 +359,7 @@ angular.module('labwiseApp')
           d.reject(ret);
         }, 0);
         return d.promise;
-    }
+      }
 
 
       var o = {'id':soid,
@@ -393,6 +394,53 @@ angular.module('labwiseApp')
 
     }
 
+    function _getSpOrders(spID) {
+
+      //console.log(file);
+      var ret = _defResult(), d = $q.defer();
+
+
+      var spID = spID || ''
+      if(!spID.length) {
+
+        ret.msg = 'Invalid input!';
+        //reject via timeout for indicator to receive rejection
+        $timeout(function() {
+          d.reject(ret);
+        }, 0);
+        return d.promise;
+
+      }
+
+
+      var o = {'providerId':spID};
+      $log.debug('get orders ' + JSON.stringify(o));
+
+      Parse.save({api: 'getSpOrders'}, o).$promise.then(function(data){
+        //$log.debug('getSpOrder response ' + JSON.stringify(data));
+          /*Update all user info*/
+        ret.sts = true;
+        d.resolve(data.result);
+      }).catch(function(r){
+        ret = _parseErrorResponse(r.data||r);
+        d.reject(ret);
+      }).finally(function(){
+        d.reject(ret);
+      }, function(s) {
+        //proxy the notification
+        if(angular.isString(s) && s.length) {
+          d.notify(s);
+        }
+      });
+
+      return d.promise
+
+    }
+
+    function _getSpOrderList() {
+      return sos;
+    }
+
 
     return {
       isLoggedIn: function() { return user.isLoggedIn; },
@@ -402,6 +450,8 @@ angular.module('labwiseApp')
       createOrder : _createOrder,
       uploadFile : _uploadFile,
       updateOrder : _updateOrder,
+      getSpOrders : _getSpOrders,
+      getSpOrderList : _getSpOrderList,
 
 
     };
