@@ -107,7 +107,9 @@ labwiseApp.controller('registerController', ['$scope', '$location', '$route', '$
 
   };
 
+  $scope.savingUser = false;
   $scope.saveProvider = function () {
+
 
     console.log($scope.pname  + '&&' + $scope.email  + ' &&' + $scope.mobile  + '&&' +  $scope.passwd);
 
@@ -132,6 +134,7 @@ labwiseApp.controller('registerController', ['$scope', '$location', '$route', '$
       return;
     }
 
+    $scope.savingUser = true;
 
     var payload = {};
     payload.email = email;
@@ -200,6 +203,8 @@ labwiseApp.controller('registerController', ['$scope', '$location', '$route', '$
       return;
     }
 
+    $scope.savingUser = true;
+
     var payload = {};
     payload.email = email;
     payload.mobile = mobile;
@@ -254,9 +259,11 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
 
   $scope.logon = function () {
 
+
     var regex = /^1?([2-9]\d\d){2}\d{4}$/,
     regexReplace = /\D/g,
     EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+
 
     if(!($scope.login && $scope.passwd)) {
       alert('Please enter details');
@@ -269,12 +276,13 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
       return;
     }
 
-
+    $scope.loggingIn = true;
     $scope.lPromise = userService.login(login, $scope.passwd);
 
     $scope.lPromise.then(function(u) {
         //success callback
         console.log('After login ' + JSON.stringify(u));
+        $scope.loggingIn = true;
 
         if(u.userType === 'user') {
           $location.path('/user-area');
@@ -305,7 +313,6 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
 
 
 labwiseApp.controller('providerController', function($scope, $route, $window){
-
 
   $scope.sos =  [
 	{
