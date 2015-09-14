@@ -3,11 +3,13 @@ labwiseApp.controller('mainController', ['$scope', '$route', '$window','$locatio
 
   $scope.showWhyWeb = false;
 
-  var user = userService.getUser();
+  var u = localStorage.getItem('user');
+  var user = JSON.parse(u);
+  console.log('user fetched from local stoarge ' + user.isLoggedIn);
 
   $scope.isUserLoggedIn = false;
 
-  if(user.isLoggedIn) {
+  if(user && user.isLoggedIn) {
     console.log("User is logged in..")
     $scope.isUserLoggedIn = true;
     if(user.userType === 'user') {
@@ -160,6 +162,9 @@ labwiseApp.controller('registerController', ['$scope', '$location', '$route', '$
     $scope.lPromise.then(function(u) {
         //success callback
         console.log('After signup ' + JSON.stringify(u));
+        //save to localstorage
+        localStorage.setItem('user', JSON.stringify(u));
+        localStorage.setItem('installation', 'complete');
         $location.path('/provider-area');
       }, function(r) {
           //error callback
@@ -281,6 +286,7 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
 
     $scope.lPromise.then(function(u) {
         //success callback
+        localStorage.setItem('user', JSON.stringify(u));
         console.log('After login ' + JSON.stringify(u));
         $scope.loggingIn = true;
 
