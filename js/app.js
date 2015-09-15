@@ -36,15 +36,15 @@ var app = {
 
     onErr: function(error)
     {
-        console.log('Unable startup :' + '\n' + error.message);
+        alert('Unable startup :' + '\n' + error.message);
     },
 
     onSuccess: function(position)
     {
         labwiseApp.latitude = position.coords.latitude;
         labwiseApp.longitude = position.coords.longitude;
-        console.log("lat: " + position.coords.latitude);
-        console.log("long: " + position.coords.longitude);
+        alert("lat: " + position.coords.latitude);
+        alert("long: " + position.coords.longitude);
         var lat = parseFloat(position.coords.latitude);
         var lng = parseFloat(position.coords.longitude);
 
