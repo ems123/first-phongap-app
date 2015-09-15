@@ -405,6 +405,7 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
     {id:6, name:'Hi-FOOD'}
 
   ];
+
   var u = localStorage.getItem('user');
   var user = u ? JSON.parse(u) : '';
 
@@ -421,8 +422,7 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
   $scope.labServiceSelected = false;
   $scope.pharmacyServiceSelected = false;
   $scope.isUpdateUserAddress = false;
-  var user = userService.getUser();
-  $scope.isLoggedIn = user.isLoggedIn;
+
 
 
   $scope.quickBookForm = function() {
