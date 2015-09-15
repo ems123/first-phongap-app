@@ -4,7 +4,7 @@ labwiseApp.controller('mainController', ['$scope', '$route', '$window','$locatio
   $scope.showWhyWeb = false;
 
   var u = localStorage.getItem('user');
-  var user = JSON.parse(u);
+  var user = u ? JSON.parse(u) : '';
   console.log('user fetched from local stoarge ' + user.isLoggedIn);
 
   $scope.isUserLoggedIn = false;
@@ -295,9 +295,7 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
         } else if(u.userType === 'sp') {
           $location.path('/provider-area');
         }
-
-
-        //$location.path('/user-area');
+      //$location.path('/user-area');
       }, function(r) {
           //error callback
         console.log('Login failed ' + JSON.stringify(r));
@@ -308,9 +306,6 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
       }, function(s) {
         $scope.lMessage = s;
       }).finally(function() {
-        //google recaptcha causes input element
-        //in IE not to display any updated text.
-        //setting focus() seems to fix this issue
 
       });
   }
@@ -321,332 +316,16 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
 labwiseApp.controller('providerController',['$scope', '$location', '$route', '$window','userService',
   function($scope, $location, $route, $window, userService){
 
-  $scope.sos =  [];
-  /*$scope.sos =  [
-	{
-        "createdAt": "2015-09-10T10:23:58.062Z",
-        "objectId": "K3gXkjUgyr",
-        "orderInfo": [
-            {
-                "pharmacy": {
-                    "prescription_text": ""
-                }
-            },
-            {
-                "contactInfo": {
-                    "email": "marikanti@gmail.com",
-                    "mobile": "9959688806",
-                    "pincode": "50000"
-                }
-            }
-        ],
-        "orderType": "service",
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-10T10:23:58.062Z",
-        "userId": "DW0yg4kHC1"
-    },
-	{
-        "createdAt": "2015-09-10T10:47:03.054Z",
-        "objectId": "MZS72wL5wJ",
-        "orderInfo": [
-            {
-                "pharmacy": {
-                    "prescription_text": ""
-                }
-            },
-            {
-                "contactInfo": {
-                    "email": "marikanti@gmail.com",
-                    "mobile": "9959688806",
-                    "pincode": "50000"
-                }
-            }
-        ],
-        "orderType": "service",
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-10T10:47:03.054Z",
-        "userId": "DW0yg4kHC1"
-    },
-	{
-        "createdAt": "2015-09-10T10:35:03.104Z",
-        "objectId": "QgHzk75xwi",
-        "orderInfo": [
-            {
-                "pharmacy": {
-                    "prescription_text": ""
-                }
-            },
-            {
-                "contactInfo": {
-                    "email": "marikanti@gmail.com",
-                    "mobile": "9959688806",
-                    "pincode": "50000"
-                }
-            }
-        ],
-        "orderType": "service",
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-10T10:35:03.104Z",
-        "userId": "DW0yg4kHC1"
-    },
-	{
-        "createdAt": "2015-09-10T11:25:48.183Z",
-        "objectId": "TubOo8nGiH",
-        "orderInfo": [
-            {
-                "pharmacy": {
-                    "prescription_text": ""
-                }
-            },
-            {
-                "contactInfo": {
-                    "email": "marikanti@gmail.com",
-                    "mobile": "9959688806",
-                    "pincode": "50000"
-                }
-            }
-        ],
-        "orderType": "service",
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-10T11:25:48.183Z",
-        "userId": "DW0yg4kHC1"
-    },
-
-	{
-        "createdAt": "2015-09-10T10:50:04.670Z",
-        "objectId": "ZtYzLvzorR",
-        "orderInfo": [
-            {
-                "pharmacy": {
-                    "prescription_text": ""
-                }
-            },
-            {
-                "contactInfo": {
-                    "email": "marikanti@gmail.com",
-                    "mobile": "9959688806",
-                    "pincode": "50000"
-                }
-            }
-        ],
-        "orderType": "service",
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-10T10:50:04.670Z",
-        "userId": "DW0yg4kHC1"
-    },
-	{
-        "createdAt": "2015-09-10T10:39:27.027Z",
-        "objectId": "bk0GsxqcdS",
-        "orderInfo": [
-            {
-                "pharmacy": {
-                    "prescription_text": ""
-                }
-            },
-            {
-                "contactInfo": {
-                    "email": "marikanti@gmail.com",
-                    "mobile": "9959688806",
-                    "pincode": "50000"
-                }
-            }
-        ],
-        "orderType": "service",
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-10T10:39:27.027Z",
-        "userId": "DW0yg4kHC1"
-    },
-	{
-        "createdAt": "2015-09-08T08:22:44.740Z",
-        "objectId": "bry7IuKyUH",
-        "orderInfo": [
-            {
-                "address": "#123 Hyd"
-            }
-        ],
-        "service": "LAB",
-        "status": "New",
-        "updatedAt": "2015-09-08T08:22:44.740Z",
-        "userId": "jJfL2DOyC7",
-        "orderInfo": [
-            {
-                "lab": {
-                    "lab_test":"lipid_profile",
-                    "date_time": '2015-09-10'
-                }
-            },
-            {
-                "contactInfo": {
-                    "email": "marikanti@gmail.com",
-                    "mobile": "9959688806",
-                    "pincode": "50000"
-                }
-            }
-        ],
-    },
-	{
-        "createdAt": "2015-09-10T11:27:07.656Z",
-        "objectId": "c9z0krfl4R",
-        "orderInfo": [
-            {
-                "pharmacy": {
-                    "file_url": "http://files.parsetfss.com/184010d4-7ced-4fb3-a884-3db7b4505203/tfss-ec9d6c28-83ed-4b3a-bb55-36d7caff37cf-photo.png",
-                    "prescription_text": ""
-                }
-            },
-            {
-                "contactInfo": {
-                    "email": "marikanti@gmail.com",
-                    "mobile": "9959688806",
-                    "pincode": "50000"
-                }
-            }
-        ],
-        "orderType": "service",
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-10T11:27:14.535Z",
-        "userId": "DW0yg4kHC1"
-    },
-	{
-        "createdAt": "2015-09-08T09:14:42.099Z",
-        "objectId": "dzONIj0kVk",
-        "orderInfo": [
-            {
-                "phamracy": {
-                    "prescription_file": "",
-                    "prescription_text": "tablet\nsyrup\ngel"
-                }
-            },
-            {
-                "contactInfo": {
-                    "address": "lb nagar",
-                    "email": "marikanti@gmail.com",
-                    "mobile": "9959688806",
-                    "pincode": "50000"
-                }
-            }
-        ],
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-08T09:14:42.099Z",
-        "userId": "DW0yg4kHC1"
-    },
-	{
-        "createdAt": "2015-09-10T10:33:42.805Z",
-        "objectId": "fmjSYaXiVr",
-        "orderInfo": [
-            {
-                "pharmacy": {
-                    "prescription_text": ""
-                }
-            },
-            {
-                "contactInfo": {
-                    "email": "marikanti@gmail.com",
-                    "mobile": "9959688806",
-                    "pincode": "50000"
-                }
-            }
-        ],
-        "orderType": "service",
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-10T10:33:42.805Z",
-        "userId": "DW0yg4kHC1"
-    },
-	{
-        "createdAt": "2015-09-10T11:43:47.144Z",
-        "objectId": "hotRWeVt32",
-        "orderInfo": [
-            {
-                "hibits": {
-                    "file_url": "http://files.parsetfss.com/184010d4-7ced-4fb3-a884-3db7b4505203/tfss-f04f1696-30b7-4cef-af77-b8046dd8459a-account_updater_services120313.pdf"
-                }
-            }
-        ],
-        "orderType": "hibits",
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-10T11:43:53.291Z",
-        "userId": "DW0yg4kHC1"
-    },
-	{
-        "createdAt": "2015-09-08T09:06:11.456Z",
-        "objectId": "iybLEe1k0q",
-        "orderInfo": [
-            {
-                "prescription_file": "",
-                "prescription_text": "table\nsyrup"
-            },
-            {
-                "email": "marikanti@gmail.com",
-                "mobile": "9959688806",
-                "pincode": "50000"
-            }
-        ],
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-08T09:06:11.456Z",
-        "userId": "DW0yg4kHC1"
-    },
-	{
-        "createdAt": "2015-09-08T09:14:38.250Z",
-        "objectId": "jE3swKcL3m",
-        "orderInfo": [
-            {
-                "pharmacy": {
-                    "file_url": "http://files.parsetfss.com/184010d4-7ced-4fb3-a884-3db7b4505203/tfss-bed0bfdf-c417-4854-a44f-39d41d7ccff4-image3A4616",
-                    "prescription_text": "tablet\nsyrup\ngel"
-                }
-            },
-            {
-                "contactInfo": {
-                    "address": "lb nagar",
-                    "email": "marikanti@gmail.com",
-                    "mobile": "9959688806",
-                    "pincode": "50000"
-                }
-            }
-        ],
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-08T09:14:38.250Z",
-        "userId": "DW0yg4kHC1"
-    },
-	{
-        "createdAt": "2015-09-10T09:44:25.380Z",
-        "objectId": "jI3MntjcoM",
-        "orderInfo": [
-            {
-                "pharmacy": {
-                    "prescription_text": "crocin\ndecold"
-                }
-            },
-            {
-                "contactInfo": {
-                    "email": "marikanti@gmail.com",
-                    "mobile": "9959688806",
-                    "pincode": "50000"
-                }
-            }
-        ],
-        "orderType": "service",
-        "service": "PHARMACY",
-        "status": "New",
-        "updatedAt": "2015-09-10T09:44:25.380Z",
-        "userId": "DW0yg4kHC1"
-    }
-
-]; */
+  $scope.sos = [];
   var u = localStorage.getItem('user');
-  var user = JSON.parse(u);
+  var user = u ? JSON.parse(u) : '';
+
+  if(user && user.isLoggedIn) {
+    $scope.isLoggedIn = true;
+  } else {
+    $scope.isLoggedIn = false;
+  }
+
   $scope.showOrderDetailsTrue = false;
   $scope.proceed = function () {
     $window.open('http://labwise.in', '_blank');
@@ -727,11 +406,11 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
 
   ];
   var u = localStorage.getItem('user');
-  var user = JSON.parse(u);
+  var user = u ? JSON.parse(u) : '';
 
   $scope.service_name = $scope.service_list[2];
 
-  if(user.isLoggedIn) {
+  if(user && user.isLoggedIn) {
     $scope.isLoggedIn = true;
   } else {
     $scope.isLoggedIn = false;
