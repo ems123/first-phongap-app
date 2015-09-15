@@ -1,6 +1,9 @@
 labwiseApp.controller('mainController', ['$scope', '$route', '$window','$location', 'userService', function($scope, $route, $window, $location, userService ){
 
 
+  //alert(labwiseApp.latitude);
+  //(labwiseApp.longitude);
+
   $scope.showWhyWeb = false;
 
   var u = localStorage.getItem('user');
@@ -13,9 +16,9 @@ labwiseApp.controller('mainController', ['$scope', '$route', '$window','$locatio
     console.log("User is logged in..")
     $scope.isUserLoggedIn = true;
     if(user.userType === 'user') {
-      $location.path('/user-area');
+      //$location.path('/user-area');
     } else if (user.userType === 'sp') {
-      $location.path('/provider-area');
+      //$location.path('/provider-area');
     }
   }
 
@@ -154,6 +157,8 @@ labwiseApp.controller('registerController', ['$scope', '$location', '$route', '$
     payload.area = $scope.area;
     payload.pincode = $scope.pincode;
     payload.userType = 'sp';
+    payload.latitude = labwiseApp.latitude ? labwiseApp.latitude : '';
+    payload.longitude = labwiseApp.longitude ? labwiseApp.longitude : '';
 
     console.log(payload);
 
@@ -216,6 +221,8 @@ labwiseApp.controller('registerController', ['$scope', '$location', '$route', '$
     payload.username = $scope.name;
     payload.passwd = $scope.passwd;
     payload.userType = 'user';
+    payload.latitude = labwiseApp.latitude ? labwiseApp.latitude : '';
+    payload.longitude = labwiseApp.longitude ? labwiseApp.longitude : '';
 
 
     console.log(payload);
@@ -423,8 +430,6 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
   $scope.pharmacyServiceSelected = false;
   $scope.isUpdateUserAddress = false;
 
-
-
   $scope.quickBookForm = function() {
     $scope.quickBook = true;
     $scope.labServiceSelected = false;
@@ -433,14 +438,11 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
 
   $scope.proceed = function () {
     $window.open('http://labwise.in', '_blank');
-
   }
 
   $scope.updateMyAddress = function () {
-
     $scope.isUpdateUserAddress = true;
     console.log('update address:' + $scope.isUpdateUserAddress );
-
     return;
   }
 
@@ -449,13 +451,11 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
     console.log($scope.pincode);
     $scope.isUpdateUserAddress = false;
     return;
-
   }
 
   $scope.cancelUpdateAddress = function () {
     $scope.isUpdateUserAddress = false;
     return;
-
   }
 
   $scope.serviceSelected = function (value) {

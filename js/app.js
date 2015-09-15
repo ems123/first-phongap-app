@@ -20,8 +20,9 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
+
         app.receivedEvent('deviceready');
-        //.geolocation.getCurrentPosition(app.onSuccess, app.onErr);
+        navigator.geolocation.getCurrentPosition(app.onSuccess, app.onErr);
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
@@ -35,12 +36,34 @@ var app = {
 
     onErr: function(error)
     {
-        alert('Unable startup :' + '\n' + error.message);
+        console.log('Unable startup :' + '\n' + error.message);
     },
 
     onSuccess: function(position)
     {
         labwiseApp.latitude = position.coords.latitude;
         labwiseApp.longitude = position.coords.longitude;
+        console.log("lat: " + position.coords.latitude);
+        console.log("long: " + position.coords.longitude);
+        var lat = parseFloat(position.coords.latitude);
+        var lng = parseFloat(position.coords.longitude);
+
+        var latlng = new google.maps.LatLng(lat, lng);
+        geocoder.geocode({'latLng': latlng}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            if (results[1]) {
+              var reverse_geo = results[1];
+              if (reverse_geo.address_components[0]) {
+
+                alert(reverse_geo.address_components[4].long_name+"," + reverse_geo.address_components[3].long_name+"," + reverse_geo.address_components[2].long_name+"," + reverse_geo.address_components[0].long_name);
+                //text = text + "0: " + reverse_geo.address_components[0].long_name + "<br />"1: " + reverse_geo.address_components[1].long_name + "<br />"";
+              }
+            }
+          }
+          else {
+              alert("No hay information Geocoding.");
+          }
+        });
+
     }
 };
