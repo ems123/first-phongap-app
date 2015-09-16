@@ -40,7 +40,7 @@ labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$wind
 
       }
       else {
-        alert("No hay information Geocoding.");
+        alert("Unable to get location info.");
       }
     });
   };
