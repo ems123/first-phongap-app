@@ -382,9 +382,9 @@ labwiseApp.controller('providerController',['$scope', '$location', '$route', '$w
     $scope.isLoggedIn = false;
   }
 
-  $scope.city = user.city;
-  $scope.pincode = user.pincode;
-  $scope.area = user.area;
+  $scope.city = user.city ? user.city: userService.getUserCity();
+  $scope.pincode = user.pincode ? user.pincode: userService.getUserPincode();;
+  $scope.area = user.area  ? user.area: userService.getUserArea();
 
 
   $scope.showOrderDetailsTrue = false;
@@ -478,9 +478,10 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
     $scope.isLoggedIn = false;
   }
 
-  $scope.city = user.city;
-  $scope.pincode = user.pincode;
-  $scope.area = user.area;
+  $scope.city = user.city ? user.city: userService.getUserCity();
+  $scope.pincode = user.pincode ? user.pincode: userService.getUserPincode();;
+  $scope.area = user.area  ? user.area: userService.getUserArea();
+  console.log(userService.getUserLocation())
   $scope.quickBook = false;
   $scope.getHiBits = false;
   $scope.labServiceSelected = false;

@@ -437,6 +437,18 @@ angular.module('labwiseApp')
       return userLocation;
     }
 
+    function _getUserCity () {
+      return userLocation.locality;
+    }
+
+    function _getUserPincode() {
+      return userLocation.postal_code;
+    }
+
+    function _getUserArea() {
+      return userLocation.sublocality_level_1;
+    }
+    
     return {
       isLoggedIn: function() { return user.isLoggedIn; },
       getUser: function() {return user;},
@@ -449,6 +461,9 @@ angular.module('labwiseApp')
       getSpOrderList : _getSpOrderList,
       updateUserLocation : _updateUserLocation,
       getUserLocation : _getUserLocation,
+      getUserCity : _getUserCity,
+      getUserArea : _getUserArea,
+      getUserPincode : _getUserPincode,
 
     };
 
