@@ -1,8 +1,51 @@
-labwiseApp.controller('mainController', ['$scope', '$route', '$window','$location', 'userService', function($scope, $route, $window, $location, userService ){
+labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$window','$location', 'userService', function($rootScope, $scope, $route, $window, $location, userService ){
 
 
-  //alert(labwiseApp.latitude);
-  //(labwiseApp.longitude);
+  var componentForm = {
+        street_number: 'short_name',
+        route: 'long_name',
+        sublocality_level_3 : 'short_name', //street
+        sublocality_level_1: 'short_name', //area locality
+        locality : 'long_name',
+        administrative_area_level_1: 'short_name', //state
+        administrative_area_level_2: 'short_name', //city
+        country: 'long_name',
+        postal_code: 'short_name',
+        postal_town: 'short_name'
+  };
+
+  var onGeoSuccess = function(position) {
+      console.log("getting geolocation");
+      var lat = parseFloat(position.coords.latitude);
+      var lng = parseFloat(position.coords.longitude);
+      var latlng = new google.maps.LatLng(lat, lng);
+      geocoder = new google.maps.Geocoder();
+      geocoder.geocode({'latLng': latlng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results[1]) {
+          //userService.updateUserLocation(formatted_address, results[1].formatted_address);
+          //alert(JSON.stringify(results[0]));
+          //alert(JSON.stringify(results[1]));
+           var reverse_geo = results[0];
+           if (reverse_geo.address_components[0]) {
+             for (var i = 0; i < reverse_geo.address_components.length; i++) {
+               var addressType = reverse_geo.address_components[i].types[0];
+               if (componentForm[addressType]) {
+                 var val = reverse_geo.address_components[i][componentForm[addressType]];
+                 userService.updateUserLocation(addressType, val);
+               }
+             }
+           }
+         }
+
+      }
+      else {
+        alert("No hay information Geocoding.");
+      }
+    });
+  };
+
+  navigator.geolocation.getCurrentPosition(onGeoSuccess);
 
   $scope.showWhyWeb = false;
 
@@ -55,11 +98,12 @@ labwiseApp.controller('mainController', ['$scope', '$route', '$window','$locatio
 
 }]);
 
-labwiseApp.controller('registerController', ['$scope', '$location', '$route', '$window','userService',
-  function($scope, $location, $route, $window, userService){
+labwiseApp.controller('registerController', ['$rootScope','$scope', '$location', '$route', '$window','userService',
+  function($rootScope, $scope, $location, $route, $window, userService){
 
-    var user = userService.getUser();
-    if(user.isLoggedIn) {
+
+  var user = userService.getUser();
+  if(user.isLoggedIn) {
 
       console.log("already logged in..");
       if(user.userType === 'user') {
@@ -76,14 +120,23 @@ labwiseApp.controller('registerController', ['$scope', '$location', '$route', '$
 
   $scope.word = '/^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/';
 
-
   $scope.providerSelected = function () {
+    var userlocation = userService.getUserLocation();
+    console.log(userlocation);
+    $scope.city = userlocation.locality ? userlocation.locality : '' ;
+    $scope.area = userlocation.sublocality_level_1 ? userlocation.sublocality_level_1 : '';
+    $scope.pincode = userlocation.postal_code ? userlocation.postal_code : '';
 
     $scope.providerView = true;
     $scope.chooseTrue = false;
   };
 
   $scope.userSelected = function () {
+    var userlocation = userService.getUserLocation();
+    console.log(userlocation);
+    $scope.city = userlocation.locality ? userlocation.locality : '' ;
+    $scope.area = userlocation.sublocality_level_1 ? userlocation.sublocality_level_1 : '';
+    $scope.pincode = userlocation.postal_code ? userlocation.postal_code : '';
 
     $scope.providerView = false;
     $scope.chooseTrue = false;
@@ -91,8 +144,6 @@ labwiseApp.controller('registerController', ['$scope', '$location', '$route', '$
   };
 
   $scope.submitProvideFormView1 = function() {
-
-
 
     if(! ($scope.lab || $scope.nurse || $scope.rmp || $scope.physio || $scope.food) ) {
       alert('Please select at least one service');
@@ -157,8 +208,6 @@ labwiseApp.controller('registerController', ['$scope', '$location', '$route', '$
     payload.area = $scope.area;
     payload.pincode = $scope.pincode;
     payload.userType = 'sp';
-    payload.latitude = labwiseApp.latitude ? labwiseApp.latitude : '';
-    payload.longitude = labwiseApp.longitude ? labwiseApp.longitude : '';
 
     console.log(payload);
 
@@ -221,8 +270,9 @@ labwiseApp.controller('registerController', ['$scope', '$location', '$route', '$
     payload.username = $scope.name;
     payload.passwd = $scope.passwd;
     payload.userType = 'user';
-    payload.latitude = labwiseApp.latitude ? labwiseApp.latitude : '';
-    payload.longitude = labwiseApp.longitude ? labwiseApp.longitude : '';
+    payload.city = $scope.city;
+    payload.area = $scope.area;
+    payload.pincode = $scope.pincode;
 
 
     console.log(payload);
@@ -261,7 +311,7 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
   var user = userService.getUser();
   if(user.isLoggedIn) {
 
-    console.log("already logged in..");
+    //console.log("already logged in..");
     if(user.userType === 'user') {
       $location.path('/user-area');
     } else if(user.userType === 'sp') {
@@ -271,11 +321,9 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
 
   $scope.logon = function () {
 
-
     var regex = /^1?([2-9]\d\d){2}\d{4}$/,
     regexReplace = /\D/g,
     EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-
 
     if(!($scope.login && $scope.passwd)) {
       alert('Please enter details');
@@ -323,6 +371,10 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
 labwiseApp.controller('providerController',['$scope', '$location', '$route', '$window','userService',
   function($scope, $location, $route, $window, userService){
 
+  $scope.city = user.city;
+  $scope.pincode = user.pincode;
+  $scope.area = user.area;
+
   $scope.sos = [];
   var u = localStorage.getItem('user');
   var user = u ? JSON.parse(u) : '';
@@ -352,10 +404,10 @@ labwiseApp.controller('providerController',['$scope', '$location', '$route', '$w
       $scope.fetchingOrders = false;
       //$scope.sos = userService.getSpOrderList();
       data.sos.forEach(function(so) {
-        console.log('getSpOrder response ' + JSON.stringify(so));
+        //console.log('getSpOrder response ' + JSON.stringify(so));
         $scope.sos.push(so);
       });
-      console.log('orders fetched ' + $scope.sos);
+      //console.log('orders fetched ' + $scope.sos);
 
     }, function (err){
       console.log('Unable fetch orders')
@@ -367,7 +419,7 @@ labwiseApp.controller('providerController',['$scope', '$location', '$route', '$w
     $scope.fetchingOrders = true;
   }
   $scope.showOrderDetails = function (soid) {
-    console.log(soid);
+    //console.log(soid);
     $scope.showOrderDetailsTrue = true;
     $scope.sso = $scope.sos[soid];
     return;
@@ -424,6 +476,9 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
     $scope.isLoggedIn = false;
   }
 
+  $scope.city = user.city;
+  $scope.pincode = user.pincode;
+  $scope.area = user.area;
   $scope.quickBook = false;
   $scope.getHiBits = false;
   $scope.labServiceSelected = false;
@@ -549,11 +604,10 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
       lab.lab_test = $scope.lab_test ? $scope.lab_test : '';
       orderInfo.push({"lab":lab});
     }
-
     //create the order
     var contactInfo = {};
-    contactInfo.address = $scope.address ? $scope.address :user.address.address;
-    contactInfo.pincode = $scope.pincode ? $scope.pincode : user.address.pincode;
+    contactInfo.address = $scope.address ? $scope.address : (user.area + '' + user.city);
+    contactInfo.pincode = $scope.pincode ? $scope.pincode : user.pincode;
     contactInfo.mobile =  $scope.mobile ? $scope.mobile : user.mobile;
     contactInfo.email = user.email;
     orderInfo.push({"contactInfo":contactInfo});

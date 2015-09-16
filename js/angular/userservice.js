@@ -6,6 +6,8 @@ angular.module('labwiseApp')
 
     var sos = [];
 
+    var userLocation = {};
+
     var user = {  //Default user object
           'isLoggedIn' : false,
           'username': '',
@@ -16,12 +18,10 @@ angular.module('labwiseApp')
           'firstName': '',
           'lastName': '',
           'userType': '',
-          'address' : {},
+          'city' : '',
+          'area' : '',
+          'pincode' : ''
         };
-        //user = {};    //cached user info
-    //Using merge for recursive copy and avoid object reference
-     //angular.merge(user, _defUser);
-
 
     //Update user info from Parse API response
   function _updateLoggedInStatus() {
@@ -57,6 +57,9 @@ angular.module('labwiseApp')
      user.emailVerified = u.emailVerified;
      user.mobileVerified = u.mobileVerified || false;
      user.userType = u.userType;
+     user.city = u.city;
+     user.area = u.area;
+     user.pincode = u.pincode;
 
      _updateLoggedInStatus();
 
@@ -388,37 +391,23 @@ angular.module('labwiseApp')
             d.notify(s);
           }
         });
-
         return d.promise;
-
-
     }
-
     function _getSpOrders(spID) {
-
       //console.log(file);
       var ret = _defResult(), d = $q.defer();
-
-
       var spID = spID || ''
       if(!spID.length) {
-
         ret.msg = 'Invalid input!';
         //reject via timeout for indicator to receive rejection
         $timeout(function() {
           d.reject(ret);
         }, 0);
         return d.promise;
-
       }
-
-
       var o = {'providerId':spID};
       $log.debug('get orders ' + JSON.stringify(o));
-
       Parse.save({api: 'getSpOrders'}, o).$promise.then(function(data){
-        //$log.debug('getSpOrder response ' + JSON.stringify(data));
-          /*Update all user info*/
         ret.sts = true;
         d.resolve(data.result);
       }).catch(function(r){
@@ -432,15 +421,21 @@ angular.module('labwiseApp')
           d.notify(s);
         }
       });
-
       return d.promise
-
     }
 
     function _getSpOrderList() {
       return sos;
     }
 
+    function _updateUserLocation (addressType, value){
+      userLocation[addressType] = value;
+      return;
+    }
+
+    function _getUserLocation (){
+      return userLocation;
+    }
 
     return {
       isLoggedIn: function() { return user.isLoggedIn; },
@@ -452,7 +447,8 @@ angular.module('labwiseApp')
       updateOrder : _updateOrder,
       getSpOrders : _getSpOrders,
       getSpOrderList : _getSpOrderList,
-
+      updateUserLocation : _updateUserLocation,
+      getUserLocation : _getUserLocation,
 
     };
 
