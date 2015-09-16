@@ -371,9 +371,6 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
 labwiseApp.controller('providerController',['$scope', '$location', '$route', '$window','userService',
   function($scope, $location, $route, $window, userService){
 
-  $scope.city = user.city;
-  $scope.pincode = user.pincode;
-  $scope.area = user.area;
 
   $scope.sos = [];
   var u = localStorage.getItem('user');
@@ -384,6 +381,11 @@ labwiseApp.controller('providerController',['$scope', '$location', '$route', '$w
   } else {
     $scope.isLoggedIn = false;
   }
+
+  $scope.city = user.city;
+  $scope.pincode = user.pincode;
+  $scope.area = user.area;
+
 
   $scope.showOrderDetailsTrue = false;
   $scope.proceed = function () {
