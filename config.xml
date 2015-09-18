@@ -23,7 +23,7 @@
     <feature name="http://api.phonegap.com/1.0/network"/>
     <feature name="http://api.phonegap.com/1.0/notification"/>
     <gap:plugin name="org.apache.cordova.device"/>
-    <gap:plugin name="oorg.apache.cordova.dialogs"/>
+    <gap:plugin name="org.apache.cordova.dialogs"/>
     <gap:plugin name="org.apache.cordova.vibration"/>
     <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.4.0" />
 
