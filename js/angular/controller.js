@@ -1,4 +1,11 @@
-labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$window','$location', 'userService', function($rootScope, $scope, $route, $window, $location, userService ){
+labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$window','$location', 'userService', 'pushService', function($rootScope, $scope, $route, $window, $location, userService, pushService ){
+
+  pushService.register().then(function(result) {
+    // Success!
+  }, function(err) {
+    // An error occured. Show a message to the user
+  });
+
 
   var componentForm = {
         street_number: 'short_name',

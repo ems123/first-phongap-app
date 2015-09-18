@@ -23,6 +23,7 @@ var app = {
 
         app.receivedEvent('deviceready');
         navigator.geolocation.getCurrentPosition(app.onSuccess, app.onErr);
+        pushNotification = window.plugins.pushNotification;
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
