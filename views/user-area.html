@@ -37,14 +37,12 @@
       </div>
       <div class="form-group" data-ng-show="labServiceSelected" >
         <div class="input-group">
-          <input class="form-control input-lg" type="text" name="lab_test" ng-model="lab_test" placeholder="Enter Test Name" required />
+          <autocomplete attr-input-class="form-control input-lg" type="text" attr-input-name="lab_test" data="labTestList" ng-model="lab_test" attr-placeholder="Enter Test Name" required /<autocomplete>
         </div>
       </div>
       <div class="form-group" data-ng-show="pharmacyServiceSelected" >
         <div class="input-group">
-
           <textarea class="form-control input-lg" placeholder="Enter Drug Name One per line" rows="2" id="prescription_text" name="prescription_text" ng-maxlength="100" ng-model="prescription_text" ></textarea>
-
         </div>
         <div class="input-group">
           <label> OR upload prescription (only image/pdf) </label>

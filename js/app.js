@@ -1,4 +1,4 @@
-var labwiseApp = angular.module('labwiseApp', ['ngRoute','ui.bootstrap', 'ngResource', 'cgBusy' ]);
+var labwiseApp = angular.module('labwiseApp', ['ngRoute','ui.bootstrap', 'ngResource', 'cgBusy', 'autocomplete' ]);
 
 var app = {
     // Application Constructor

@@ -7,6 +7,7 @@ angular.module('labwiseApp')
     var sos = [];
 
     var userLocation = {};
+    var labTestList = [];
 
     var user = {  //Default user object
           'isLoggedIn' : false,
@@ -448,7 +449,28 @@ angular.module('labwiseApp')
     function _getUserArea() {
       return userLocation.sublocality_level_1;
     }
-    
+
+    function _getLABTestList() {
+
+      if(labTestList.length == 0) {
+        var o = {"config_name":"LABTESTLIST"};
+        //fetch from parse
+        Parse.save({api: 'getConfig'}, o).$promise.then(function(data){
+          $log.debug('get config ' + JSON.stringify(data.result));
+          data.result.config.forEach(function(value) {
+            labTestList.push(value);
+          });
+          return labTestList;
+        }).catch(function(r){
+
+        }).finally(function(){
+          //return LabTestList;
+        }, function(s) {
+        });
+      }
+      return labTestList;
+    }
+
     return {
       isLoggedIn: function() { return user.isLoggedIn; },
       getUser: function() {return user;},
@@ -464,6 +486,7 @@ angular.module('labwiseApp')
       getUserCity : _getUserCity,
       getUserArea : _getUserArea,
       getUserPincode : _getUserPincode,
+      getLABTestList : _getLABTestList,
 
     };
 

@@ -1,6 +1,5 @@
 labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$window','$location', 'userService', function($rootScope, $scope, $route, $window, $location, userService ){
 
-
   var componentForm = {
         street_number: 'short_name',
         route: 'long_name',
@@ -464,8 +463,10 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
     {id:4, name:'NURSE'},
     {id:5, name:'PHYSIO'},
     {id:6, name:'Hi-FOOD'}
-
   ];
+
+  //init labtests listening
+  $scope.labTestList = userService.getLABTestList();
 
   var u = localStorage.getItem('user');
   var user = u ? JSON.parse(u) : '';
@@ -479,9 +480,9 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
   }
 
   $scope.city = user.city ? user.city: userService.getUserCity();
-  $scope.pincode = user.pincode ? user.pincode: userService.getUserPincode();;
+  $scope.pincode = user.pincode ? user.pincode : userService.getUserPincode();
   $scope.area = user.area  ? user.area: userService.getUserArea();
-  console.log(userService.getUserLocation())
+  console.log(userService.getUserLocation());
   $scope.quickBook = false;
   $scope.getHiBits = false;
   $scope.labServiceSelected = false;
@@ -491,6 +492,11 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
   $scope.quickBookForm = function() {
     $scope.quickBook = true;
     $scope.labServiceSelected = false;
+
+    if($scope.labTestList.length == 0) {
+      $scope.labTestList = userService.getLABTestList();
+    }
+    console.log($scope.labTestList);
     return;
   }
 
@@ -643,14 +649,16 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
             }).finally(function() {
             });
         }
-        alert('You request has been submitted ');
+        alert('You request has been submitted!');
         $scope.quickBook = false;
+
       }, function(r) {
 
         console.log('createOrder failed ' + JSON.stringify(r));
         alert('createOrder Failed : ' + r.msg);
       }, function(s) {
         $scope.lMessage = s;
+
       }).finally(function() {
       });
   }
