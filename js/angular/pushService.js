@@ -4,7 +4,7 @@ angular.module('labwiseApp').factory('pushService', function($q, $window) {
   var pushConfig = {};
   if (device.platform == 'android' || device.platform == 'Android') {
     pushConfig = {
-      "senderID":"GOOGLE-SERVER-API-KEY",
+      "senderID":"AIzaSyBqowOyiEWd41TcXAuaaThtENCWGNGbcK4",
       "ecb":"onNotificationGCM"
     };
   } else {

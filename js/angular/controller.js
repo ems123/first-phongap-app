@@ -1,9 +1,9 @@
 labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$window','$location', 'userService', 'pushService', function($rootScope, $scope, $route, $window, $location, userService, pushService ){
 
   pushService.register().then(function(result) {
-    // Success!
+    console.log('successfully registered for push');
   }, function(err) {
-    // An error occured. Show a message to the user
+    alert(err);
   });
 
 
