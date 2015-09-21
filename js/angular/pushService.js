@@ -91,8 +91,7 @@ angular.module('labwiseApp').factory('pushService', function($q, $window) {
 
       window.plugins.pushNotification.register(
       function (result) {
-          navigator.notification.alert(result);
-          q.resolve(result);
+        q.resolve(result);
       },
       function (error) {
           q.reject(error);
@@ -100,6 +99,20 @@ angular.module('labwiseApp').factory('pushService', function($q, $window) {
       pushConfig);
 
       return q.promise;
+    },
+
+    unregister:  function () {
+      var q = $q.defer();
+      window.plugins.pushNotification.unregister(
+      function (result) {
+          q.resolve(result);
+      },
+      function (error) {
+          q.reject(error);
+      });
+
+      return q.promise;
     }
+
   }
 });

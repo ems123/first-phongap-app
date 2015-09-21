@@ -1,14 +1,6 @@
 labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$window','$location', 'userService', 'pushService', function($rootScope, $scope, $route, $window, $location, userService, pushService ){
 
-  pushService.register().then(function(result) {
-    console.log('successfully registered for push');
-    navigator.notification.alert(result);
-  }, function(err) {
-    alert(err);
-  });
-
-
-  var componentForm = {
+var componentForm = {
         street_number: 'short_name',
         route: 'long_name',
         sublocality_level_3 : 'short_name', //street

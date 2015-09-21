@@ -14,6 +14,7 @@ var app = {
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
+
     },
     // deviceready Event Handler
     //
@@ -23,7 +24,31 @@ var app = {
 
         app.receivedEvent('deviceready');
         navigator.geolocation.getCurrentPosition(app.onSuccess, app.onErr);
-        pushNotification = window.plugins.pushNotification;
+
+        try  {
+          labwiseApp.pushService.unregister(
+            function(e) {
+              //unRegister Success!!!
+              navigator.notification.alert('unRegister Success');
+            },
+            function(e) {
+              //unRegister Failed!!!
+              navigator.notification.alert('unRegister Failed');
+
+          });
+        }
+        catch(err) {
+          //Handle errors here
+          navigator.notification.alert(err.message);
+        }
+
+        labwiseApp.pushService.register().then(function(result) {
+          navigator.notification.alert(result);
+        }, function(err) {
+          navigator.notification.alert(err);
+        });
+
+
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
@@ -37,11 +62,12 @@ var app = {
 
     onErr: function(error)
     {
-        alert('Unable startup :' + '\n' + error.message);
+        //alert('Unable startup :' + '\n' + error.message);
     },
 
     onSuccess: function(position)
     {
+        navigator.notification.alert('geolocation found');
         labwiseApp.latitude = position.coords.latitude;
         labwiseApp.longitude = position.coords.longitude;
     }
