@@ -4,7 +4,7 @@ angular.module('labwiseApp').factory('pushService', function($q, $window) {
   var pushConfig = {};
   if (device.platform == 'android' || device.platform == 'Android') {
     pushConfig = {
-      "senderID":"AIzaSyBqowOyiEWd41TcXAuaaThtENCWGNGbcK4",
+      "senderID":"680823599239"; //AIzaSyBqowOyiEWd41TcXAuaaThtENCWGNGbcK4",
       "ecb":"onNotificationGCM"
     };
   } else {
@@ -24,6 +24,7 @@ angular.module('labwiseApp').factory('pushService', function($q, $window) {
           // Your GCM push server needs to know the regID before it can push to this device
           // here is where you might want to send it the regID for later use.
           console.log("regID = " + event.regid);
+          alert("regID = " + event.regid);
 
           //send device reg id to server
 
@@ -90,6 +91,7 @@ angular.module('labwiseApp').factory('pushService', function($q, $window) {
 
       window.plugins.pushNotification.register(
       function (result) {
+          navigator.notification.alert(result);
           q.resolve(result);
       },
       function (error) {
