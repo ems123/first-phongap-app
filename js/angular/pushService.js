@@ -25,7 +25,7 @@ angular.module('labwiseApp').factory('pushService', function($q, $window) {
           // here is where you might want to send it the regID for later use.
           console.log("regID = " + event.regid);
           alert("regID = " + event.regid);
-
+          localStorage.set('regID', event.regid);
           //send device reg id to server
 
         }
@@ -105,7 +105,8 @@ angular.module('labwiseApp').factory('pushService', function($q, $window) {
       var q = $q.defer();
       window.plugins.pushNotification.unregister(
       function (result) {
-          q.resolve(result);
+        navigator.notification.alert(result);
+        q.resolve(result);
       },
       function (error) {
           q.reject(error);

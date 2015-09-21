@@ -23,33 +23,8 @@ var app = {
     onDeviceReady: function() {
 
         app.receivedEvent('deviceready');
-        checkConnection();
-
+        app.checkConnection();
         navigator.geolocation.getCurrentPosition(app.onSuccess, app.onErr);
-
-        try  {
-          labwiseApp.pushService.unregister(
-            function(e) {
-              //unRegister Success!!!
-              navigator.notification.alert('unRegister Success');
-            },
-            function(e) {
-              //unRegister Failed!!!
-              navigator.notification.alert('unRegister Failed');
-
-          });
-        }
-        catch(err) {
-          //Handle errors here
-          navigator.notification.alert(err.message);
-        }
-
-        labwiseApp.pushService.register().then(function(result) {
-          navigator.notification.alert(result);
-        }, function(err) {
-          navigator.notification.alert(err);
-        });
-
 
     },
     // Update DOM on a Received Event
@@ -85,9 +60,35 @@ var app = {
         states[Connection.CELL_3G]  = 'Cell 3G connection';
         states[Connection.CELL_4G]  = 'Cell 4G connection';
         states[Connection.NONE]     = 'No network connection';
+        navigator.notification.alert('connection type:' + states[networkState]);
         if(networkState == Connection.NONE) {
           navigator.notification.alert('No network connection. Please turn on network access');
         }
+  },
+
+  registerPush: function () {
+
+        try  {
+          labwiseApp.pushService.unregister(
+            function(e) {
+              //unRegister Success!!!
+              navigator.notification.alert('unRegister Success');
+            },
+            function(e) {
+              //unRegister Failed!!!
+              navigator.notification.alert('unRegister Failed');
+            });
+        }catch(err) {
+          //Handle errors here
+          navigator.notification.alert(err.message);
+        }
+
+        labwiseApp.pushService.register().then(function(result) {
+          navigator.notification.alert(result);
+          localStorage.set('RED-ID', result);
+        }, function(err) {
+          navigator.notification.alert(err);
+        });
   }
 
 };

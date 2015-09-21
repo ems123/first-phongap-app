@@ -44,7 +44,9 @@ var componentForm = {
     });
   };
 
+  navigator.notification.activityStart('Finding your location ...');
   navigator.geolocation.getCurrentPosition(onGeoSuccess);
+  navigator.notification.activityStop();
 
   $scope.showWhyWeb = false;
 
@@ -190,6 +192,7 @@ labwiseApp.controller('registerController', ['$rootScope','$scope', '$location',
     }
 
     $scope.savingUser = true;
+    navigator.notification.activityStart('Saving your details...')
 
     var payload = {};
     payload.email = email;
@@ -234,6 +237,7 @@ labwiseApp.controller('registerController', ['$rootScope','$scope', '$location',
         //setting focus() seems to fix this issue
 
       });
+      navigator.notification.activityStop();
 
   }
 
