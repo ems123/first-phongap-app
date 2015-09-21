@@ -4,7 +4,7 @@ angular.module('labwiseApp').factory('pushService', function($q, $window) {
   var pushConfig = {};
   if (device.platform == 'android' || device.platform == 'Android') {
     pushConfig = {
-      "senderID":"680823599239"; //AIzaSyBqowOyiEWd41TcXAuaaThtENCWGNGbcK4",
+      "senderID":"680823599239", //AIzaSyBqowOyiEWd41TcXAuaaThtENCWGNGbcK4",
       "ecb":"onNotificationGCM"
     };
   } else {
