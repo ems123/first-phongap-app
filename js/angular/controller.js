@@ -2,7 +2,6 @@ labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$wind
 
   pushService.register().then(function(result) {
     console.log('successfully registered for push');
-    ;
     navigator.notification.alert(result);
   }, function(err) {
     alert(err);
