@@ -5,9 +5,10 @@ var app = {
     initialize: function() {
         //console.log("initializing");
         //this.bindEvents();
-        if (navigator.userAgent.match(/(iOS|iPhone|iPod|iPad|Android|BlackBerry)/)) {
+        if (navigator.userAgent.match(/(iOS|iPhone|iPod|iPad|Android|BlackBerry|android)/)) {
           console.log("UA: Running in Cordova/PhoneGap");
           document.addEventListener("deviceready", this.bootstrapAngularMobile, false);
+          navigator.notification.alert('Preparing for installation.');
         } else {
           console.log("UA: Running in browser");
           this.bootstrapAngular();
@@ -30,10 +31,12 @@ var app = {
       // This assumes your app is named "app" and is on the body tag: <body ng-app="app">
       // Change the selector from "body" to whatever you need
       var domElement = document.getElementById('labwiseApp');
+      navigator.notification.alert('initializing App.');
       // Change the application name from "app" if needed
       angular.bootstrap(document, ['labwiseApp']);
       //app.receivedEvent('deviceready');
       app.checkConnection();
+
       app.registerPush();
     },
 

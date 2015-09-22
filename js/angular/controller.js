@@ -57,12 +57,13 @@ var componentForm = {
         alert("Unable to get location info.");
       }
     });
+    navigator.notification.activityStop();
   };
 
-
+  navigator.notification.activityStart('Savining your details...', 'Saving');
+  navigator.geolocation.getCurrentPosition(onGeoSuccess);
 
   $scope.showWhyWeb = false;
-
 
   $scope.openSite = function () {
     $window.open('http://labwise.in', '_blank');
@@ -145,12 +146,12 @@ labwiseApp.controller('registerController', ['$rootScope','$scope', '$location',
   $scope.submitProvideFormView1 = function() {
 
     if(! ($scope.lab || $scope.nurse || $scope.rmp || $scope.physio || $scope.food) ) {
-      alert('Please select at least one service');
+      navigator.notification.alert('Please select at least one service');
       return;
     }
 
     if(!($scope.city && $scope.area && $scope.pincode) ) {
-      alert('Please fill all details');
+      navigator.notification.alert('Please fill all details');
       return;
     }
 
@@ -173,7 +174,7 @@ labwiseApp.controller('registerController', ['$rootScope','$scope', '$location',
     EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
 
     if(!($scope.pname && $scope.email && $scope.mobile && $scope.passwd)) {
-      alert('Please enter details');
+      navigator.notification.alert('Please enter details');
       return;
     }
 
@@ -185,7 +186,7 @@ labwiseApp.controller('registerController', ['$rootScope','$scope', '$location',
     var mobile = $scope.mobile;
     mobile = mobile.replace(regexReplace, '');
     if((mobile.length !== 10) || !regex.test(mobile)) {
-      alert('Please enter a valid 10 digit mobile');
+      navigator.notification.alert('Please enter a valid 10 digit mobile');
       return;
     }
 
