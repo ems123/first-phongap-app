@@ -34,10 +34,10 @@ var app = {
       navigator.notification.alert('initializing App.');
       // Change the application name from "app" if needed
       app.checkConnection();
-      app.registerPush();
+      setTimeout(app.registerPush(), 3000 );
+      //app.registerPush();
       angular.bootstrap(document, ['labwiseApp']);
       //app.receivedEvent('deviceready');
-
     },
 
     /*
@@ -176,43 +176,47 @@ var app = {
 
     registerPush: function () {
 
-      if (device.platform == 'android' || device.platform == 'Android') {
-        pushConfig = {
-          "senderID":"680823599239", //AIzaSyBqowOyiEWd41TcXAuaaThtENCWGNGbcK4",
-          "ecb":"onNotificationGCM"
-        };
-      } else {
-        pushConfig = {
-          "badge":"true",
-          "sound":"true",
-          "alert":"true",
-          "ecb":"onNotificationAPN"
-        };
-      }
-      try {
-        window.plugins.pushNotification.unregister(
-          function(e) {
-            //unRegister Success!!!
+      navigator.notification.activityStart('Registering Device ' + device.uuid);
+      setTimeout(function () {
+          if (device.platform == 'android' || device.platform == 'Android') {
+            pushConfig = {
+              "senderID":"680823599239", //AIzaSyBqowOyiEWd41TcXAuaaThtENCWGNGbcK4",
+              "ecb":"onNotificationGCM"
+            };
+          } else {
+            pushConfig = {
+              "badge":"true",
+              "sound":"true",
+              "alert":"true",
+              "ecb":"onNotificationAPN"
+            };
+          }
+          try {
+            window.plugins.pushNotification.unregister(
+              function(e) {
+                //unRegister Success!!!
+                navigator.notification.alert('unRegister Success');
+              },
+              function(e) {
+                //unRegister Failed!!!
+
+              });
+          }catch(err) {
+            //Handle errors here
+            navigator.notification.alert(err.message);
+          }
+
+        window.plugins.pushNotification.register(
+          function (result) {
             navigator.notification.alert('unRegister Success');
+            navigator.notification.alert(result);
           },
-          function(e) {
-            //unRegister Failed!!!
-
-          });
-      }catch(err) {
-        //Handle errors here
-        navigator.notification.alert(err.message);
-      }
-
-    window.plugins.pushNotification.register(
-      function (result) {
-        navigator.notification.alert('unRegister Success');
-        navigator.notification.alert(result);
-      },
-      function (error) {
-          navigator.notification.alert('unRegister Failed');
-      },
-      pushConfig);
+          function (error) {
+              navigator.notification.alert('unRegister Failed');
+          },
+          pushConfig);
+          navigator.notification.activityStop();
+      }, 3000);
 
   }
 

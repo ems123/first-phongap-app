@@ -61,7 +61,11 @@ var componentForm = {
   };
 
   navigator.notification.activityStart('Finding the current location...', 'location');
-  navigator.geolocation.getCurrentPosition(onGeoSuccess);
+  setTimeout(function getLocation(){
+                  navigator.geolocation.getCurrentPosition(onGeoSuccess);
+                  navigator.notification.activityStop();
+                  }, 3000 );
+
 
   $scope.showWhyWeb = false;
 
