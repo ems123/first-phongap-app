@@ -26,6 +26,7 @@ var app = {
         app.checkConnection();
         navigator.geolocation.getCurrentPosition(app.onSuccess, app.onErr);
 
+
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
@@ -35,6 +36,8 @@ var app = {
 
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
+        var device = window.device;
+        labwiseApp.device = device;
     },
 
     onErr: function(error)
