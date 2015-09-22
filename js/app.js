@@ -33,7 +33,7 @@ var app = {
       var domElement = document.getElementById('labwiseApp');
       navigator.notification.alert('initializing App.');
       // Change the application name from "app" if needed
-      app.checkConnection();
+      setTimeout(app.checkConnection(), 3000 );
       setTimeout(app.registerPush(), 3000 );
       //app.registerPush();
       angular.bootstrap(document, ['labwiseApp']);
@@ -88,7 +88,8 @@ var app = {
     },*/
 
     checkConnection: function() {
-        navigator.notification.alert('checking connection.');
+
+        navigator.notification.activityStart('Checking connection');
         var networkState = navigator.network.connection.type;
 
         var states = {};
@@ -103,6 +104,8 @@ var app = {
         if(networkState == Connection.NONE) {
           navigator.notification.alert('No network connection. Please turn on network access');
         }
+        navigator.notification.activityStop();
+
   },
 
     // handle GCM notifications for Android
@@ -177,46 +180,46 @@ var app = {
     registerPush: function () {
 
       navigator.notification.activityStart('Registering Device ' + device.uuid);
-      setTimeout(function () {
-          if (device.platform == 'android' || device.platform == 'Android') {
-            pushConfig = {
-              "senderID":"680823599239", //AIzaSyBqowOyiEWd41TcXAuaaThtENCWGNGbcK4",
-              "ecb":"onNotificationGCM"
-            };
-          } else {
-            pushConfig = {
-              "badge":"true",
-              "sound":"true",
-              "alert":"true",
-              "ecb":"onNotificationAPN"
-            };
-          }
-          try {
-            window.plugins.pushNotification.unregister(
-              function(e) {
-                //unRegister Success!!!
-                navigator.notification.alert('unRegister Success');
-              },
-              function(e) {
-                //unRegister Failed!!!
 
-              });
-          }catch(err) {
-            //Handle errors here
-            navigator.notification.alert(err.message);
-          }
-
-        window.plugins.pushNotification.register(
-          function (result) {
+      if (device.platform == 'android' || device.platform == 'Android') {
+        pushConfig = {
+          "senderID":"680823599239", //AIzaSyBqowOyiEWd41TcXAuaaThtENCWGNGbcK4",
+          "ecb":"onNotificationGCM"
+        };
+      } else {
+        pushConfig = {
+          "badge":"true",
+          "sound":"true",
+          "alert":"true",
+          "ecb":"onNotificationAPN"
+        };
+      }
+      try {
+        window.plugins.pushNotification.unregister(
+          function(e) {
+            //unRegister Success!!!
             navigator.notification.alert('unRegister Success');
-            navigator.notification.alert(result);
           },
-          function (error) {
-              navigator.notification.alert('unRegister Failed');
-          },
-          pushConfig);
-          navigator.notification.activityStop();
-      }, 3000);
+          function(e) {
+            //unRegister Failed!!!
+
+          });
+      }catch(err) {
+        //Handle errors here
+        navigator.notification.alert(err.message);
+      }
+
+    window.plugins.pushNotification.register(
+      function (result) {
+        navigator.notification.alert('unRegister Success');
+        navigator.notification.alert(result);
+      },
+      function (error) {
+          navigator.notification.alert('unRegister Failed');
+      },
+      pushConfig);
+      navigator.notification.activityStop();
+
 
   }
 
