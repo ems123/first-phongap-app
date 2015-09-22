@@ -14,73 +14,6 @@ labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$wind
       $location.path('/provider-area');
     }
   }
-  /*
-  $scope.deviceReady = false;
-  document.addEventListener("deviceready", onDeviceReady, false);
-
-  var onDeviceReady = function() {
-      receivedEvent('deviceready');
-      checkConnection();
-      navigator.notification.activityStart('Finding your location ...');
-      setTimeout(function loadMyUrl(){
-                          navigator.geolocation.getCurrentPosition(onGeoSuccess);
-                          navigator.notification.activityStop();
-                          }, 3000 );
-
-      navigator.notification.activityStart('Registering device ...');
-      setTimeout(function loadMyUrl(){
-                          registerPush();
-                          navigator.notification.activityStop();
-                          }, 3000 );
-
-  }
-
-  var receivedEvent = function(id) {
-
-  }
-
-  var checkConnectio = function() {
-      var networkState = navigator.network.connection.type;
-
-      var states = {};
-      states[Connection.UNKNOWN]  = 'Unknown connection';
-      states[Connection.ETHERNET] = 'Ethernet connection';
-      states[Connection.WIFI]     = 'WiFi connection';
-      states[Connection.CELL_2G]  = 'Cell 2G connection';
-      states[Connection.CELL_3G]  = 'Cell 3G connection';
-      states[Connection.CELL_4G]  = 'Cell 4G connection';
-      states[Connection.NONE]     = 'No network connection';
-      navigator.notification.alert('connection type:' + states[networkState]);
-      if(networkState == Connection.NONE) {
-        navigator.notification.alert('No network connection. Please turn on network access');
-      }
-}
-
-
-var registerPush =  function () {
-      try  {
-        pushService.unregister(
-          function(e) {
-            //unRegister Success!!!
-            navigator.notification.alert('unRegister Success');
-          },
-          function(e) {
-            //unRegister Failed!!!
-            navigator.notification.alert('unRegister Failed');
-          });
-      }catch(err) {
-        //Handle errors here
-        navigator.notification.alert(err.message);
-      }
-
-      pushService.register().then(function(result) {
-        navigator.notification.alert(result);
-        localStorage.set('RED-ID', result);
-      }, function(err) {
-        navigator.notification.alert(err);
-      });
-} */
-
 
 var componentForm = {
         street_number: 'short_name',
@@ -257,7 +190,7 @@ labwiseApp.controller('registerController', ['$rootScope','$scope', '$location',
     }
 
     $scope.savingUser = true;
-    navigator.notification.activityStart('Saving your details...');
+    navigator.notification.activityStart('Savining your details...', 'Saving');
 
     var payload = {};
     payload.email = email;
@@ -297,12 +230,13 @@ labwiseApp.controller('registerController', ['$rootScope','$scope', '$location',
       }, function(s) {
         $scope.lMessage = s;
       }).finally(function() {
+        navigator.notification.activityStop();
         //google recaptcha causes input element
         //in IE not to display any updated text.
         //setting focus() seems to fix this issue
 
       });
-      navigator.notification.activityStop();
+
 
   }
 
@@ -344,7 +278,7 @@ labwiseApp.controller('registerController', ['$rootScope','$scope', '$location',
 
 
     console.log(payload);
-
+    navigator.notification.activityStart('Savining your details...', 'Saving');
     $scope.lPromise = userService.signup(payload);
 
     $scope.lPromise.then(function(u) {
@@ -362,6 +296,7 @@ labwiseApp.controller('registerController', ['$rootScope','$scope', '$location',
       }, function(s) {
         $scope.lMessage = s;
       }).finally(function() {
+        navigator.notification.activityStop();
         //google recaptcha causes input element
         //in IE not to display any updated text.
         //setting focus() seems to fix this issue
@@ -405,6 +340,7 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
     }
 
     $scope.loggingIn = true;
+    navigator.notification.activityStart('logging in...', 'connecting');
     $scope.lPromise = userService.login(login, $scope.passwd);
 
     $scope.lPromise.then(function(u) {
@@ -429,6 +365,7 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
       }, function(s) {
         $scope.lMessage = s;
       }).finally(function() {
+        navigator.notification.activityStop();
 
       });
   }
@@ -691,6 +628,7 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
     orderInfo.push({"contactInfo":contactInfo});
 
     console.log($scope.service_name.name + ' ' + user.oID + ' ' + JSON.stringify(orderInfo) );
+    navigator.notification.activityStart('Creating Order...', 'creating');
     $scope.lPromise  = userService.createOrder($scope.service_name.name, user.oID, orderInfo);
     $scope.lPromise.then(function(o) {
 
@@ -729,6 +667,7 @@ labwiseApp.controller('userController', ['$scope', '$route', '$window', 'userSer
         $scope.lMessage = s;
 
       }).finally(function() {
+        navigator.notification.activityStop();
       });
   }
 
