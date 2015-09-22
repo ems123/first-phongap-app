@@ -60,7 +60,7 @@ var componentForm = {
     navigator.notification.activityStop();
   };
 
-  navigator.notification.activityStart('Savining your details...', 'Saving');
+  navigator.notification.activityStart('Finding the current location...', 'location');
   navigator.geolocation.getCurrentPosition(onGeoSuccess);
 
   $scope.showWhyWeb = false;

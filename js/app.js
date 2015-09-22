@@ -33,11 +33,11 @@ var app = {
       var domElement = document.getElementById('labwiseApp');
       navigator.notification.alert('initializing App.');
       // Change the application name from "app" if needed
-      angular.bootstrap(document, ['labwiseApp']);
-      //app.receivedEvent('deviceready');
       app.checkConnection();
-
+      angular.bootstrap(document, ['labwiseApp']);
       app.registerPush();
+      //app.receivedEvent('deviceready');
+
     },
 
     /*
@@ -88,6 +88,7 @@ var app = {
     },*/
 
     checkConnection: function() {
+        navigator.notification.alert('checking connection.');
         var networkState = navigator.network.connection.type;
 
         var states = {};
@@ -107,7 +108,7 @@ var app = {
   registerPush: function () {
 
         try  {
-          labwiseApp.pushService.unregister(
+          pushService.unregister(
             function(e) {
               //unRegister Success!!!
               navigator.notification.alert('unRegister Success');
@@ -121,7 +122,7 @@ var app = {
           navigator.notification.alert(err.message);
         }
 
-        labwiseApp.pushService.register().then(function(result) {
+        pushService.register().then(function(result) {
           navigator.notification.alert(result);
           localStorage.set('RED-ID', result);
         }, function(err) {
