@@ -1,5 +1,88 @@
 labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$window','$location', 'userService', 'pushService', function($rootScope, $scope, $route, $window, $location, userService, pushService ){
 
+
+
+  var u = localStorage.getItem('user');
+  var user = u ? JSON.parse(u) : '';
+  $scope.isUserLoggedIn = false;
+
+  if(user && user.isLoggedIn) {
+    console.log("User is logged in..")
+    $scope.isUserLoggedIn = true;
+    if(user.userType === 'user') {
+      $location.path('/user-area');
+    } else if (user.userType === 'sp') {
+      $location.path('/provider-area');
+    }
+  }
+
+  $scope.deviceReady = false;
+  document.addEventListener("deviceready", onDeviceReady, false);
+
+  var onDeviceReady = function() {
+      receivedEvent('deviceready');
+      checkConnection();
+      navigator.notification.activityStart('Finding your location ...');
+      setTimeout(function loadMyUrl(){
+                          navigator.geolocation.getCurrentPosition(onGeoSuccess);
+                          navigator.notification.activityStop();
+                          }, 3000 );
+
+      navigator.notification.activityStart('Registering device ...');
+      setTimeout(function loadMyUrl(){
+                          registerPush();
+                          navigator.notification.activityStop();
+                          }, 3000 );
+
+  }
+
+  var receivedEvent = function(id) {
+
+  }
+
+  var checkConnectio = function() {
+      var networkState = navigator.network.connection.type;
+
+      var states = {};
+      states[Connection.UNKNOWN]  = 'Unknown connection';
+      states[Connection.ETHERNET] = 'Ethernet connection';
+      states[Connection.WIFI]     = 'WiFi connection';
+      states[Connection.CELL_2G]  = 'Cell 2G connection';
+      states[Connection.CELL_3G]  = 'Cell 3G connection';
+      states[Connection.CELL_4G]  = 'Cell 4G connection';
+      states[Connection.NONE]     = 'No network connection';
+      navigator.notification.alert('connection type:' + states[networkState]);
+      if(networkState == Connection.NONE) {
+        navigator.notification.alert('No network connection. Please turn on network access');
+      }
+}
+
+
+var registerPush =  function () {
+      try  {
+        pushService.unregister(
+          function(e) {
+            //unRegister Success!!!
+            navigator.notification.alert('unRegister Success');
+          },
+          function(e) {
+            //unRegister Failed!!!
+            navigator.notification.alert('unRegister Failed');
+          });
+      }catch(err) {
+        //Handle errors here
+        navigator.notification.alert(err.message);
+      }
+
+      pushService.register().then(function(result) {
+        navigator.notification.alert(result);
+        localStorage.set('RED-ID', result);
+      }, function(err) {
+        navigator.notification.alert(err);
+      });
+}
+
+
 var componentForm = {
         street_number: 'short_name',
         route: 'long_name',
@@ -44,27 +127,10 @@ var componentForm = {
     });
   };
 
-  navigator.notification.activityStart('Finding your location ...');
-  navigator.geolocation.getCurrentPosition(onGeoSuccess);
-  navigator.notification.activityStop();
+
 
   $scope.showWhyWeb = false;
 
-  var u = localStorage.getItem('user');
-  var user = u ? JSON.parse(u) : '';
-  console.log('user fetched from local stoarge ' + user.isLoggedIn);
-
-  $scope.isUserLoggedIn = false;
-
-  if(user && user.isLoggedIn) {
-    console.log("User is logged in..")
-    $scope.isUserLoggedIn = true;
-    if(user.userType === 'user') {
-      $location.path('/user-area');
-    } else if (user.userType === 'sp') {
-      $location.path('/provider-area');
-    }
-  }
 
   $scope.openSite = function () {
     $window.open('http://labwise.in', '_blank');
@@ -192,7 +258,7 @@ labwiseApp.controller('registerController', ['$rootScope','$scope', '$location',
     }
 
     $scope.savingUser = true;
-    navigator.notification.activityStart('Saving your details...')
+    navigator.notification.activityStart('Saving your details...');
 
     var payload = {};
     payload.email = email;
