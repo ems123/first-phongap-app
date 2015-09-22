@@ -1,7 +1,6 @@
 labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$window','$location', 'userService', 'pushService', function($rootScope, $scope, $route, $window, $location, userService, pushService ){
 
 
-
   var u = localStorage.getItem('user');
   var user = u ? JSON.parse(u) : '';
   $scope.isUserLoggedIn = false;
@@ -15,7 +14,7 @@ labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$wind
       $location.path('/provider-area');
     }
   }
-
+  /*
   $scope.deviceReady = false;
   document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -80,7 +79,7 @@ var registerPush =  function () {
       }, function(err) {
         navigator.notification.alert(err);
       });
-}
+} */
 
 
 var componentForm = {

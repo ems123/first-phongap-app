@@ -1,12 +1,43 @@
 var labwiseApp = angular.module('labwiseApp', ['ngRoute','ui.bootstrap', 'ngResource', 'cgBusy', 'autocomplete' ]);
 
-/*var app = {
+var app = {
     // Application Constructor
     initialize: function() {
         //console.log("initializing");
-        this.bindEvents();
+        //this.bindEvents();
+        if (navigator.userAgent.match(/(iOS|iPhone|iPod|iPad|Android|BlackBerry)/)) {
+          console.log("UA: Running in Cordova/PhoneGap");
+          document.addEventListener("deviceready", this.bootstrapAngularMobile, false);
+        } else {
+          console.log("UA: Running in browser");
+          this.bootstrapAngular();
+
+        }
 
     },
+
+    bootstrapAngular : function () {
+      console.log("Bootstrapping AngularJS");
+      // This assumes your app is named "app" and is on the body tag: <body ng-app="app">
+      // Change the selector from "body" to whatever you need
+      var domElement = document.getElementById('labwiseApp');
+      // Change the application name from "app" if needed
+      angular.bootstrap(document, ['labwiseApp']);
+    },
+
+    bootstrapAngularMobile : function () {
+      console.log("Bootstrapping AngularJS");
+      // This assumes your app is named "app" and is on the body tag: <body ng-app="app">
+      // Change the selector from "body" to whatever you need
+      var domElement = document.getElementById('labwiseApp');
+      // Change the application name from "app" if needed
+      angular.bootstrap(document, ['labwiseApp']);
+      //app.receivedEvent('deviceready');
+      app.checkConnection();
+      app.registerPush();
+    },
+
+    /*
     // Bind Event Listeners
     //
     // Bind any events that are required on startup. Common events are:
@@ -20,9 +51,12 @@ var labwiseApp = angular.module('labwiseApp', ['ngRoute','ui.bootstrap', 'ngReso
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-        app.checkConnection();
-        navigator.geolocation.getCurrentPosition(app.onSuccess, app.onErr);
+      angular.element(document).ready(function() {
+            angular.bootstrap(document);
+      });
+      app.receivedEvent('deviceready');
+      app.checkConnection();
+      navigator.geolocation.getCurrentPosition(app.onSuccess, app.onErr);
 
 
     },
@@ -48,7 +82,7 @@ var labwiseApp = angular.module('labwiseApp', ['ngRoute','ui.bootstrap', 'ngReso
         navigator.notification.alert('geolocation found');
         labwiseApp.latitude = position.coords.latitude;
         labwiseApp.longitude = position.coords.longitude;
-    },
+    },*/
 
     checkConnection: function() {
         var networkState = navigator.network.connection.type;
@@ -92,4 +126,4 @@ var labwiseApp = angular.module('labwiseApp', ['ngRoute','ui.bootstrap', 'ngReso
         });
   }
 
-};*/
+};

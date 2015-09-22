@@ -2,7 +2,9 @@
 angular.module('labwiseApp').factory('pushService', function($q, $window) {
 
   var pushConfig = {};
-  
+  if (!navigator.userAgent.match(/(iOS|iPhone|iPod|iPad|Android|BlackBerry)/)) {
+    return {};
+  } else {
   if (device.platform == 'android' || device.platform == 'Android') {
     pushConfig = {
       "senderID":"680823599239", //AIzaSyBqowOyiEWd41TcXAuaaThtENCWGNGbcK4",
@@ -117,4 +119,5 @@ angular.module('labwiseApp').factory('pushService', function($q, $window) {
     }
 
   }
+}
 });
