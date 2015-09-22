@@ -34,8 +34,8 @@ var app = {
       navigator.notification.alert('initializing App.');
       // Change the application name from "app" if needed
       app.checkConnection();
-      angular.bootstrap(document, ['labwiseApp']);
       app.registerPush();
+      angular.bootstrap(document, ['labwiseApp']);
       //app.receivedEvent('deviceready');
 
     },
@@ -105,29 +105,115 @@ var app = {
         }
   },
 
-  registerPush: function () {
+    // handle GCM notifications for Android
+  onNotificationGCM: function (event) {
+      switch (event.event) {
+        case 'registered':
+          if (event.regid.length > 0) {
+            // Your GCM push server needs to know the regID before it can push to this device
+            // here is where you might want to send it the regID for later use.
+            console.log("regID = " + event.regid);
+            alert("regID = " + event.regid);
+            localStorage.set('regID', event.regid);
+            //send device reg id to server
 
-        try  {
-          pushService.unregister(
-            function(e) {
-              //unRegister Success!!!
-              navigator.notification.alert('unRegister Success');
-            },
-            function(e) {
-              //unRegister Failed!!!
-              navigator.notification.alert('unRegister Failed');
-            });
-        }catch(err) {
-          //Handle errors here
-          navigator.notification.alert(err.message);
-        }
+          }
+          break;
 
-        pushService.register().then(function(result) {
-          navigator.notification.alert(result);
-          localStorage.set('RED-ID', result);
-        }, function(err) {
-          navigator.notification.alert(err);
-        });
+        case 'message':
+            // if this flag is set, this notification happened while we were in the foreground.
+            // you might want to play a sound to get the user's attention, throw up a dialog, etc.
+            if (event.foreground) {
+              console.log('INLINE NOTIFICATION');
+              var my_media = new Media("/android_asset/www/" + event.soundname);
+              my_media.play();
+            } else {
+              if (event.coldstart) {
+                  console.log('COLDSTART NOTIFICATION');
+              } else {
+                  console.log('BACKGROUND NOTIFICATION');
+              }
+            }
+
+            navigator.notification.alert(event.payload.message);
+            console.log('MESSAGE -> MSG: ' + event.payload.message);
+            //Only works for GCM
+            console.log('MESSAGE -> MSGCNT: ' + event.payload.msgcnt);
+            //Only works on Amazon Fire OS
+            console.log('MESSAGE -> TIME: ' + event.payload.timeStamp);
+            break;
+
+        case 'error':
+            console.log('ERROR -> MSG:' + event.msg);
+            break;
+
+        default:
+            console.log('EVENT -> Unknown, an event was received and we do not know what it is');
+            break;
+      }
+    },
+
+    // handle APNS notifications for iOS
+    successIosHandler: function (result) {
+      console.log('result = ' + result);
+    },
+
+    onNotificationAPN : function (e) {
+      if (e.alert) {
+        console.log('push-notification: ' + e.alert);
+        navigator.notification.alert(e.alert);
+      }
+
+      if (e.sound) {
+        var snd = new Media(e.sound);
+        snd.play();
+      }
+
+      if (e.badge) {
+        pushNotification.setApplicationIconBadgeNumber("successIosHandler", e.badge);
+      }
+    },
+
+    registerPush: function () {
+
+      if (device.platform == 'android' || device.platform == 'Android') {
+        pushConfig = {
+          "senderID":"680823599239", //AIzaSyBqowOyiEWd41TcXAuaaThtENCWGNGbcK4",
+          "ecb":"onNotificationGCM"
+        };
+      } else {
+        pushConfig = {
+          "badge":"true",
+          "sound":"true",
+          "alert":"true",
+          "ecb":"onNotificationAPN"
+        };
+      }
+      try {
+        window.plugins.pushNotification.unregister(
+          function(e) {
+            //unRegister Success!!!
+            navigator.notification.alert('unRegister Success');
+          },
+          function(e) {
+            //unRegister Failed!!!
+
+          });
+      }catch(err) {
+        //Handle errors here
+        navigator.notification.alert(err.message);
+      }
+
+    window.plugins.pushNotification.register(
+      function (result) {
+        navigator.notification.alert('unRegister Success');
+        navigator.notification.alert(result);
+      },
+      function (error) {
+          navigator.notification.alert('unRegister Failed');
+      },
+      pushConfig);
+
   }
 
 };
