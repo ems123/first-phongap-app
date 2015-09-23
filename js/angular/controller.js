@@ -9,22 +9,22 @@ labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$wind
     console.log("User is logged in..")
     $scope.isUserLoggedIn = true;
     if(user.userType === 'user') {
-      //$location.path('/user-area');
+      $location.path('/user-area');
     } else if (user.userType === 'sp') {
-      //$location.path('/provider-area');
+      $location.path('/provider-area');
     }
   } else {
 
-    setTimeout(function() {
-      navigator.notification.activityStart('Registering Device', 'register');
-      $pushService.register().then(function(result) {
+    navigator.notification.activityStart('Registering Device', 'register');
+    pushService.register().then(function(result) {
         navigator.notification.alert(result);
+        localStorage.set('push-reg', result);
         // Success!
-        }, function(err) {
+    }, function(err) {
           // An error occured. Show a message to the user
-        });
-        navigator.notification.activityStop();
-      }, 2000);
+    });
+    navigator.notification.activityStop();
+
   }
 
 var componentForm = {
@@ -73,10 +73,10 @@ var componentForm = {
   };
 
   navigator.notification.activityStart('Finding the current location...', 'location');
-  setTimeout(function getLocation(){
-                  navigator.geolocation.getCurrentPosition(onGeoSuccess);
-                  navigator.notification.activityStop();
-                  }, 3000 );
+  setTimeout( function getLocation(){
+        navigator.geolocation.getCurrentPosition(onGeoSuccess);
+        navigator.notification.activityStop();
+  }, 3000 );
 
 
   $scope.showWhyWeb = false;
