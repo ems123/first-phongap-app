@@ -21,7 +21,6 @@ var app = {
       console.log("Bootstrapping AngularJS");
       // This assumes your app is named "app" and is on the body tag: <body ng-app="app">
       // Change the selector from "body" to whatever you need
-      var domElement = document.getElementById('labwiseApp');
       // Change the application name from "app" if needed
       angular.bootstrap(document, ['labwiseApp']);
     },
@@ -30,28 +29,13 @@ var app = {
       console.log("Bootstrapping AngularJS");
       // This assumes your app is named "app" and is on the body tag: <body ng-app="app">
       // Change the selector from "body" to whatever you need
-      var domElement = document.getElementById('labwiseApp');
       // Change the application name from "app" if needed
-      setTimeout(app.checkConnection(), 1000 );
+      //setTimeout(app.checkConnection(), 1000 );
       //setTimeout(app.registerPush(), 1000 );
       //app.registerPush();
-      angular.element(document).ready(function() {
-            angular.bootstrap(document, ['labwiseApp']);
-      });
+      angular.bootstrap(document, ['labwiseApp']);
 
       //app.receivedEvent('deviceready');
-    },
-
-
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-        var device = window.device;
-        labwiseApp.device = device;
     },
 
     /*
