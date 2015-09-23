@@ -19,6 +19,7 @@ labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$wind
     pushService.register().then(function(result) {
         navigator.notification.alert(result);
         localStorage.set('push-reg', result);
+        //$scope.lpromise = userService.registerDevice(navigator.device.uuid)
         // Success!
     }, function(err) {
           // An error occured. Show a message to the user
