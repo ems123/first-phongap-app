@@ -9,9 +9,9 @@ labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$wind
     console.log("User is logged in..")
     $scope.isUserLoggedIn = true;
     if(user.userType === 'user') {
-      $location.path('/user-area');
+      //$location.path('/user-area');
     } else if (user.userType === 'sp') {
-      $location.path('/provider-area');
+      //$location.path('/provider-area');
     }
   }
 

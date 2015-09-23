@@ -30,8 +30,10 @@ var app = {
       // This assumes your app is named "app" and is on the body tag: <body ng-app="app">
       // Change the selector from "body" to whatever you need
       // Change the application name from "app" if needed
-      //setTimeout(app.checkConnection(), 1000 );
-      //setTimeout(app.registerPush(), 1000 );
+
+      var networkState = navigator.network.connection.type;
+      navigator.notification.alert(networkState);
+      setTimeout(app.registerPush(), 1000 );
       //app.registerPush();
       angular.bootstrap(document, ['labwiseApp']);
 
@@ -87,7 +89,7 @@ var app = {
 
     checkConnection: function() {
 
-        navigator.notification.activityStart('Checking connection', 'checking');
+
         var networkState = navigator.network.connection.type;
 
         var states = {};

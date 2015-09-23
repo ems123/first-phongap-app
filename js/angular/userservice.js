@@ -188,11 +188,8 @@ angular.module('labwiseApp')
           d.notify(s);
         }
       });
-
       //always return deferred object
       return d.promise;
-
-
     }
 
     function _login(username, password) {
