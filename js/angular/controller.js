@@ -13,6 +13,18 @@ labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$wind
     } else if (user.userType === 'sp') {
       //$location.path('/provider-area');
     }
+  } else {
+
+    setTimeout(function() {
+      navigator.notification.activityStart('Registering Device', 'register');
+      $pushService.register().then(function(result) {
+        navigator.notification.alert(result);
+        // Success!
+        }, function(err) {
+          // An error occured. Show a message to the user
+        });
+        navigator.notification.activityStop();
+      }, 2000);
   }
 
 var componentForm = {
