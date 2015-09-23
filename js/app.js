@@ -8,7 +8,7 @@ var app = {
         if (navigator.userAgent.match(/(iOS|iPhone|iPod|iPad|Android|BlackBerry|android)/)) {
           console.log("UA: Running in Cordova/PhoneGap");
           document.addEventListener("deviceready", this.bootstrapAngularMobile, false);
-          navigator.notification.alert('Preparing for installation.');
+          //navigator.notification.alert('Preparing for installation.');
         } else {
           console.log("UA: Running in browser");
           this.bootstrapAngular();
@@ -31,13 +31,27 @@ var app = {
       // This assumes your app is named "app" and is on the body tag: <body ng-app="app">
       // Change the selector from "body" to whatever you need
       var domElement = document.getElementById('labwiseApp');
-      navigator.notification.alert('initializing App.');
       // Change the application name from "app" if needed
-      setTimeout(app.checkConnection(), 3000 );
-      setTimeout(app.registerPush(), 3000 );
+      setTimeout(app.checkConnection(), 1000 );
+      //setTimeout(app.registerPush(), 1000 );
       //app.registerPush();
-      angular.bootstrap(document, ['labwiseApp']);
+      angular.element(document).ready(function() {
+            angular.bootstrap(document, ['labwiseApp']);
+      });
+
       //app.receivedEvent('deviceready');
+    },
+
+
+    receivedEvent: function(id) {
+        var parentElement = document.getElementById(id);
+        var listeningElement = parentElement.querySelector('.listening');
+        var receivedElement = parentElement.querySelector('.received');
+
+        listeningElement.setAttribute('style', 'display:none;');
+        receivedElement.setAttribute('style', 'display:block;');
+        var device = window.device;
+        labwiseApp.device = device;
     },
 
     /*
@@ -89,7 +103,7 @@ var app = {
 
     checkConnection: function() {
 
-        navigator.notification.activityStart('Checking connection');
+        navigator.notification.activityStart('Checking connection', 'checking');
         var networkState = navigator.network.connection.type;
 
         var states = {};
