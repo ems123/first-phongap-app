@@ -14,13 +14,13 @@ if(user && user.isLoggedIn) {
       $location.path('/provider-area');
     }
   } else {
-      var regId = localStorage.getItem('regID') ? localStorage.getItem('regID') : '';
+    var regID = localStorage.getItem('regID');
+    var regId = regID ? regID : '';
     if( regId.length ) {
-
       var promise = userService.registerDevice(device.uuid, device.name, device.platform, regId);
       promise.then(function(u) {
           //success callback
-          navigator.notification.alert("device regsiterd regID = " + regId);
+          navigator.notification.alert("device regsiterd regID = " + u);
         }, function(r) {
             //error callback
           console.log('Signup failed ' + JSON.stringify(r));
@@ -33,15 +33,15 @@ if(user && user.isLoggedIn) {
         });
 
     } else {
-
-    navigator.notification.activityStart('Registering Device', 'register');
-    pushService.register().then(function(result) {
-        //$scope.lpromise = userService.registerDevice(navigator.device.uuid)
-        // Success!
-    }, function(err) {
-          // An error occured. Show a message to the user
-    });
-    navigator.notification.activityStop();
+      navigator.notification.activityStart('Registering Device', 'connecting');
+      setTimeout(function() {
+        pushService.register().then(function(result) {
+          navigator.notification.alert('Registration ' + result);
+        }, function(err) {
+        }).finally (function() {
+          navigator.notification.activityStop();
+        });
+      }, 3000);
 
   }
 }

@@ -28,10 +28,12 @@ angular.module('labwiseApp').factory('pushService', ['$q', '$window', 'userServi
           // Your GCM push server needs to know the regID before it can push to this device
           // here is where you might want to send it the regID for later use.
           console.log("regID = " + event.regid);
+          localStorage.setItem('regID', event.regid);
+          navigator.notification.alert("regID = " + event.regid);
           var promise = userService.registerDevice(device.uuid, device.name, device.platform, event.regid);
-          $promise.then(function(u) {
+          promise.then(function(u) {
               //success callback
-              navigator.notification.alert("device regsiterd regID = " + event.regid);
+              navigator.notification.alert("device regitered suceessfully = " + u);
             }, function(r) {
                 //error callback
               console.log('Signup failed ' + JSON.stringify(r));
@@ -42,10 +44,7 @@ angular.module('labwiseApp').factory('pushService', ['$q', '$window', 'userServi
             }).finally(function() {
               navigator.notification.activityStop();
             });
-
-          localStorage.setItem('regID', event.regid);
           //send device reg id to server
-
         }
         break;
 
