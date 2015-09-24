@@ -5,7 +5,7 @@ labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$wind
   var user = u ? JSON.parse(u) : '';
   $scope.isUserLoggedIn = false;
 
-  if(user && user.isLoggedIn) {
+if(user && user.isLoggedIn) {
     console.log("User is logged in..")
     $scope.isUserLoggedIn = true;
     if(user.userType === 'user') {
@@ -14,11 +14,28 @@ labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$wind
       $location.path('/provider-area');
     }
   } else {
+      var regId = localStorage.getItem('regID') ? localStorage.getItem('regID') : '';
+    if( regId.length ) {
+
+      var promise = userService.registerDevice(device.uuid, device.name, device.platform, regId);
+      promise.then(function(u) {
+          //success callback
+          navigator.notification.alert("device regsiterd regID = " + regId);
+        }, function(r) {
+            //error callback
+          console.log('Signup failed ' + JSON.stringify(r));
+          navigator.notification.alert('Unable to register device :' + r.msg);
+          //on failure reset the captcha widget as it can't be re-used
+        }, function(s) {
+
+        }).finally(function() {
+          navigator.notification.activityStop();
+        });
+
+    } else {
 
     navigator.notification.activityStart('Registering Device', 'register');
     pushService.register().then(function(result) {
-        navigator.notification.alert(result);
-        localStorage.set('push-reg', result);
         //$scope.lpromise = userService.registerDevice(navigator.device.uuid)
         // Success!
     }, function(err) {
@@ -27,6 +44,8 @@ labwiseApp.controller('mainController', ['$rootScope','$scope', '$route', '$wind
     navigator.notification.activityStop();
 
   }
+}
+
 
 var componentForm = {
         street_number: 'short_name',

@@ -28,9 +28,22 @@ angular.module('labwiseApp').factory('pushService', ['$q', '$window', 'userServi
           // Your GCM push server needs to know the regID before it can push to this device
           // here is where you might want to send it the regID for later use.
           console.log("regID = " + event.regid);
-          navigator.notification.alert("regID = " + event.regid);
-          userService.registerDevice(device.uuid, device.name, device.platform, event.regid);
-          localStorage.set('regID', event.regid);
+          var promise = userService.registerDevice(device.uuid, device.name, device.platform, event.regid);
+          $promise.then(function(u) {
+              //success callback
+              navigator.notification.alert("device regsiterd regID = " + event.regid);
+            }, function(r) {
+                //error callback
+              console.log('Signup failed ' + JSON.stringify(r));
+              navigator.notification.alert('Unable to register device :' + r.msg);
+              //on failure reset the captcha widget as it can't be re-used
+            }, function(s) {
+
+            }).finally(function() {
+              navigator.notification.activityStop();
+            });
+
+          localStorage.setItem('regID', event.regid);
           //send device reg id to server
 
         }

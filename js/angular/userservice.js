@@ -477,7 +477,8 @@ angular.module('labwiseApp')
       var platform = platform || '';
       var regId = regId || '';
 
-      if(!uui.length || !regId.length) {
+
+      if(!uuid.length || !regId.length) {
         ret.msg = 'Invalid input!';
         //reject via timeout for indicator to receive rejection
         $timeout(function() {
@@ -491,6 +492,7 @@ angular.module('labwiseApp')
             'regId':regId
       };
       $log.debug('register device ' + JSON.stringify(o));
+
       Parse.save({api: 'registerDevice'}, o).$promise.then(function(data){
         ret.sts = true;
         d.resolve(data.result);
