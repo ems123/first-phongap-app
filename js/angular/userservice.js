@@ -468,6 +468,48 @@ angular.module('labwiseApp')
       return labTestList;
     }
 
+
+    function _registerDevice (uuid, name, platform, regId) {
+
+      var ret = _defResult(), d = $q.defer();
+      var uuid = uuid || '';
+      var name = name || '';
+      var platform = platform || '';
+      var regId = regId || '';
+
+      if(!uui.length || !regId.length) {
+        ret.msg = 'Invalid input!';
+        //reject via timeout for indicator to receive rejection
+        $timeout(function() {
+          d.reject(ret);
+        }, 0);
+        return d.promise;
+      }
+      var o = {'uuid':uuid,
+            'name':name,
+            'platform': platform,
+            'regId':regId
+      };
+      $log.debug('register device ' + JSON.stringify(o));
+      Parse.save({api: 'registerDevice'}, o).$promise.then(function(data){
+        ret.sts = true;
+        d.resolve(data.result);
+      }).catch(function(r){
+        ret = _parseErrorResponse(r.data||r);
+        d.reject(ret);
+      }).finally(function(){
+        d.reject(ret);
+      }, function(s) {
+        //proxy the notification
+        if(angular.isString(s) && s.length) {
+          d.notify(s);
+        }
+      });
+      return d.promise
+
+
+    }
+
     return {
       isLoggedIn: function() { return user.isLoggedIn; },
       getUser: function() {return user;},
@@ -484,6 +526,7 @@ angular.module('labwiseApp')
       getUserArea : _getUserArea,
       getUserPincode : _getUserPincode,
       getLABTestList : _getLABTestList,
+      registerDevice : _registerDevice,
 
     };
 

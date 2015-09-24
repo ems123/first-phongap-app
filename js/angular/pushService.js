@@ -1,5 +1,5 @@
 'use strict';
-angular.module('labwiseApp').factory('pushService', function($q, $window) {
+angular.module('labwiseApp').factory('pushService', ['$q', '$window', 'userService', function($q, $window, userService) {
 
   var pushConfig = {};
   if (!navigator.userAgent.match(/(iOS|iPhone|iPod|iPad|Android|BlackBerry)/)) {
@@ -28,7 +28,8 @@ angular.module('labwiseApp').factory('pushService', function($q, $window) {
           // Your GCM push server needs to know the regID before it can push to this device
           // here is where you might want to send it the regID for later use.
           console.log("regID = " + event.regid);
-          alert("regID = " + event.regid);
+          navigator.notification.alert("regID = " + event.regid);
+          userService.registerDevice(device.uuid, device.name, device.platform, event.regid);
           localStorage.set('regID', event.regid);
           //send device reg id to server
 
@@ -121,4 +122,4 @@ angular.module('labwiseApp').factory('pushService', function($q, $window) {
 
   }
 }
-});
+}]);
