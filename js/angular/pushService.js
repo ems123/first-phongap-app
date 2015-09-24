@@ -33,7 +33,7 @@ angular.module('labwiseApp').factory('pushService', ['$q', '$window', 'userServi
           var promise = userService.registerDevice(device.uuid, device.name, device.platform, event.regid);
           promise.then(function(u) {
               //success callback
-              navigator.notification.alert("device regitered suceessfully = " + u);
+              navigator.notification.alert("device regitered successfully = " + u);
             }, function(r) {
                 //error callback
               console.log('Signup failed ' + JSON.stringify(r));

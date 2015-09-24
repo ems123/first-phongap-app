@@ -16,6 +16,7 @@ if(user && user.isLoggedIn) {
   } else {
     var regID = localStorage.getItem('regID');
     var regId = regID ? regID : '';
+    navigator.notification.alert(regId);
     if( regId.length ) {
       var promise = userService.registerDevice(device.uuid, device.name, device.platform, regId);
       promise.then(function(u) {
@@ -92,7 +93,7 @@ var componentForm = {
     navigator.notification.activityStop();
   };
 
-  navigator.notification.activityStart('Finding the current location...', 'location');
+  //navigator.notification.activityStart('Finding the current location...', 'location');
   setTimeout( function getLocation(){
         navigator.geolocation.getCurrentPosition(onGeoSuccess);
         navigator.notification.activityStop();
@@ -377,7 +378,7 @@ labwiseApp.controller('loginController', ['$scope', '$location', '$route', '$win
     }
 
     $scope.loggingIn = true;
-    navigator.notification.activityStart('logging in...', 'connecting');
+    //navigator.notification.activityStart('logging in...', 'connecting');
     $scope.lPromise = userService.login(login, $scope.passwd);
 
     $scope.lPromise.then(function(u) {
